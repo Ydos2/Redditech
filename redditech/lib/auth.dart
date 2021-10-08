@@ -1,30 +1,56 @@
+// @dart=2.9
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
-import 'package:http/http.dart' as http;
-import 'package:http_auth/http_auth.dart' as auth;
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
-Future <bool> logMe(String user, String password) async
+class TokenAsk extends StatefulWidget {
+  const TokenAsk({Key key}) : super(key: key);
+
+    @override
+    TokenAskState createState() => TokenAskState();
+}
+
+class TokenAskState extends State<TokenAsk> {
+    @override
+    void initState() {
+        super.initState();
+        if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    }
+    @override
+    Widget build(BuildContext context) {
+        return WebView(initialUrl: askAccess());
+    }
+}
+
+
+String addArgsToUrl(String baseUrl, Map<String, String> args)
 {
-    http.Client c = auth.BasicAuthClient("qix2qQzhsmeJwSpKa-HJ5w", "_QJP_1fxo3vVgSTy6zOSK8Y0mUo5PQ");
-    Uri url = Uri.Parse("https://www.reddit.com/api/v1/access_token");
+    baseUrl += "?";
+    args.forEach((key, value) {
+       baseUrl += "$key=$value&";
+    });
+    baseUrl.substring(0, baseUrl.length - 1);
+    return (baseUrl);
+}
+
+String askAccess()
+{
+    String url = "https://www.reddit.com/api/v1/authorize";
 
     Map data = {
-        "grant_type": "password",
-        "username": user,
-        "password": password
+        'client_id': 'qix2qQzhsmeJwSpKa-HJ5w',
+        'response_type': 'code',
+        'state': 'trucRandomFautVraimentFaireUnGenerateurRandom',
+        'redirect_uri': 'http://localhost:8080',
+        'duration': 'permanent',
+        'scope': 'history'
     };
-
-    var body = json.encode(data);
-
-    var resp = await c.post(url, body: body);
-
-    print("${resp.statusCode}");
-    print("${resp.body}");
-    c.close();
-    return true;
+    return addArgsToUrl(url, data);
 }
 
-main() {
-    logMe("oof", "eeee");
-}
+void main() => runApp(const MaterialApp(home: TokenAsk())) ;
