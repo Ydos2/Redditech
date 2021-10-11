@@ -42,7 +42,7 @@ String askAccess()
 {
     String url = "https://www.reddit.com/api/v1/authorize";
 
-    Map data = {
+    Map<String, String> data = {
         'client_id': 'qix2qQzhsmeJwSpKa-HJ5w',
         'response_type': 'code',
         'state': 'trucRandomFautVraimentFaireUnGenerateurRandom',
