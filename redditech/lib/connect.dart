@@ -100,8 +100,10 @@ class ConnectWidget extends StatelessWidget {
                   height: 70.41000366210938,
                   child: Stack(children: <Widget>[
                     Positioned(
-                        top: 0,
-                        left: 0,
+                      top: 0,
+                      left: 0,
+                      // Faire gaffe la
+                      child: FlatButton(
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
@@ -138,7 +140,10 @@ class ConnectWidget extends StatelessWidget {
                               ),
                             ],
                           ),
-                        )),
+                        ),
+                        onPressed: () {},
+                      ),
+                    ),
                   ]))),
           Positioned(
               top: 250,
