@@ -2,18 +2,89 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
-  runApp(MyAppp());
+  runApp(MyApp());
 }
 
-class MyAppp extends StatelessWidget {
+/// This is the main application widget.
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: ListView(
-          children: [HomepageWidget()],
-        ),
+      home: MyStatefulWidget(),
+    );
+  }
+}
+
+/// This is the stateful widget that the main application instantiates.
+class MyStatefulWidget extends StatefulWidget {
+  const MyStatefulWidget({Key? key}) : super(key: key);
+
+  @override
+  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+}
+
+/// This is the private State class that goes with MyStatefulWidget.
+class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  int _selectedIndex = 0;
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+
+  static const List<Widget> _widgetOptions = <Widget>[
+    Text(
+      'Index 0: Home',
+      style: optionStyle,
+    ),
+    Text(
+      'Index 1: Subreddit',
+      style: optionStyle,
+    ),
+    Text(
+      'Index 2: Post',
+      style: optionStyle,
+    ),
+    Image(
+      image: AssetImage('assets/images/Image1460.png'),
+    ),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.star),
+            label: 'Subreddit',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_circle_outline),
+            label: 'Post',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle),
+            label: 'Account',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.red[500],
+        unselectedItemColor: Colors.grey[500],
+        onTap: _onItemTapped,
       ),
     );
   }
@@ -118,15 +189,25 @@ class HomepageWidget extends StatelessWidget {
                                                   height: 1),
                                             ),
                                             SizedBox(width: 10),
-                                            SvgPicture.asset(
-                                                'assets/images/verified.svg',
-                                                semanticsLabel: 'verified'),
+                                            Container(
+                                                width: 20,
+                                                height: 20,
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                      image: AssetImage(
+                                                          'assets/images/Ellipse2.png'),
+                                                      fit: BoxFit.fitWidth),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.elliptical(
+                                                              20, 20)),
+                                                )),
                                           ],
                                         ),
                                       ),
                                       SizedBox(height: 6),
                                       Text(
-                                        '12:30 PM · Apr 21, 2021',
+                                        'Published by u/lol . 1 mois',
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                             color: Color.fromRGBO(
@@ -146,7 +227,7 @@ class HomepageWidget extends StatelessWidget {
                           ),
                           SizedBox(height: 10),
                           Text(
-                            'This is the original component. Edit me to make global changes to all. \nNew edit mode so nice !!',
+                            'This is the original component. Edit me to make global changes to all.\nNew edit mode so nice !!',
                             textAlign: TextAlign.left,
                             style: TextStyle(
                                 color: Color.fromRGBO(0, 0, 0, 1),
@@ -292,15 +373,25 @@ class HomepageWidget extends StatelessWidget {
                                                   height: 1),
                                             ),
                                             SizedBox(width: 10),
-                                            SvgPicture.asset(
-                                                'assets/images/verified.svg',
-                                                semanticsLabel: 'verified'),
+                                            Container(
+                                                width: 20,
+                                                height: 20,
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                      image: AssetImage(
+                                                          'assets/images/Ellipse2.png'),
+                                                      fit: BoxFit.fitWidth),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.elliptical(
+                                                              20, 20)),
+                                                )),
                                           ],
                                         ),
                                       ),
                                       SizedBox(height: 6),
                                       Text(
-                                        '12:30 PM · Apr 21, 2021',
+                                        'Published by u/lol . 1 mois',
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                             color: Color.fromRGBO(
@@ -320,7 +411,7 @@ class HomepageWidget extends StatelessWidget {
                           ),
                           SizedBox(height: 10),
                           Text(
-                            'This is the original component. Edit me to make global changes to all. \nNew edit mode so nice !!',
+                            'This is the original component. Edit me to make global changes to all.\nNew edit mode so nice !!',
                             textAlign: TextAlign.left,
                             style: TextStyle(
                                 color: Color.fromRGBO(0, 0, 0, 1),
@@ -466,15 +557,25 @@ class HomepageWidget extends StatelessWidget {
                                                   height: 1),
                                             ),
                                             SizedBox(width: 10),
-                                            SvgPicture.asset(
-                                                'assets/images/verified.svg',
-                                                semanticsLabel: 'verified'),
+                                            Container(
+                                                width: 20,
+                                                height: 20,
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                      image: AssetImage(
+                                                          'assets/images/Ellipse2.png'),
+                                                      fit: BoxFit.fitWidth),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.elliptical(
+                                                              20, 20)),
+                                                )),
                                           ],
                                         ),
                                       ),
                                       SizedBox(height: 6),
                                       Text(
-                                        '12:30 PM · Apr 21, 2021',
+                                        'Published by u/lol . 1 mois',
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                             color: Color.fromRGBO(
@@ -494,7 +595,7 @@ class HomepageWidget extends StatelessWidget {
                           ),
                           SizedBox(height: 10),
                           Text(
-                            'This is the original component. Edit me to make global changes to all. \nNew edit mode so nice !!',
+                            'This is the original component. Edit me to make global changes to all.\nNew edit mode so nice !!',
                             textAlign: TextAlign.left,
                             style: TextStyle(
                                 color: Color.fromRGBO(0, 0, 0, 1),
@@ -697,12 +798,6 @@ class HomepageWidget extends StatelessWidget {
                                                   color: Color.fromRGBO(
                                                       239, 245, 251, 0),
                                                 ))),
-                                        Positioned(
-                                            top: 1.8619592189788818,
-                                            left: -0.000015288591384887695,
-                                            child: SvgPicture.asset(
-                                                'assets/images/home.svg',
-                                                semanticsLabel: 'home')),
                                       ]))),
                             ]))),
                     Positioned(

@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/B-DEV-501-TLS-5-1-redditech-mathias.ressort.iml" filepath="$PROJECT_DIR$/.idea/B-DEV-501-TLS-5-1-redditech-mathias.ressort.iml" />
+      <module fileurl="file://$PROJECT_DIR$/redditech.iml" filepath="$PROJECT_DIR$/redditech.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/redditech_android.iml" filepath="$PROJECT_DIR$/android/redditech_android.iml" />
     </modules>
   </component>
 </project>

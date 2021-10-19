@@ -39,6 +39,7 @@ dependencies:
   http_auth: any
   flutter_svg: ^0.22.0
   google_fonts: ^2.1.0
+  material_floating_search_bar: ^0.3.5
 
 dev_dependencies:
   flutter_test:
@@ -63,9 +64,13 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  #assets:
-  # - images/vector.svg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/Ellipse1.png
+    - assets/images/Ellipse2.png
+    - assets/images/home.svg
+    - assets/images/Image1460.png
+    - assets/images/Image1461.png
+    - assets/images/vector.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
