@@ -29,25 +29,113 @@ class MyStatefulWidget extends StatefulWidget {
 /// This is the private State class that goes with MyStatefulWidget.
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   int _selectedIndex = 0;
+
+  static double coverHeight = 180;
+  static double profileHeight = 144;
+  static double top = coverHeight - profileHeight / 2;
+  static double bottom = profileHeight / 2;
+
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
+  final List<Widget> _widgetOptions = <Widget>[
+    Column(
+      children: <Widget>[
+        Text(
+          "Index 0: Map",
+          style: optionStyle,
+        ),
+      ],
     ),
-    Text(
-      'Index 1: Subreddit',
-      style: optionStyle,
+
+// --------------------------------------
+    Column(
+      children: <Widget>[
+        Text("Index 1: History", style: optionStyle),
+        FlutterLogo(),
+      ],
     ),
-    Text(
-      'Index 2: Post',
-      style: optionStyle,
+
+// --------------------------------------
+    Column(
+      children: <Widget>[
+        Text(
+          "Index 2: Challenges",
+          style: optionStyle,
+        ),
+        FlutterLogo(),
+      ],
     ),
-    Image(
-      image: AssetImage('assets/images/Image1460.png'),
-    ),
+
+// --------------------------------------
+// Front
+    Scaffold(
+        // List defilement
+        body: ListView(
+      padding: EdgeInsets.zero,
+      children: <Widget>[
+        Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.center,
+          children: [
+            // Background image
+            Container(
+              color: Colors.grey,
+              margin: EdgeInsets.only(bottom: bottom),
+              child: Image.network(
+                'https://styles.redditmedia.com/t5_i703r/styles/profileBanner_vbsd6d5xelv51.jpg?width=1280&height=384&crop=1280:384,smart&s=8954ada843a7e6ed9827a5f41ca235d448fd1d6d',
+                width: double.infinity,
+                height: coverHeight,
+                fit: BoxFit.cover,
+              ),
+            ),
+            // Icone image
+            Positioned(
+              top: top,
+              child: CircleAvatar(
+                radius: profileHeight / 2,
+                backgroundColor: Colors.transparent,
+                backgroundImage: NetworkImage(
+                    'https://i.redd.it/snoovatar/avatars/1c38f7a0-cb34-4357-8d68-5b33d18d4c26.png'),
+              ),
+            )
+          ],
+        ),
+// Bottom
+        Column(
+          children: [
+            Text(
+              'Alexandre Flion',
+              style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Software Engineer',
+              style: TextStyle(fontSize: 20, color: Colors.black),
+            ),
+            const SizedBox(height: 16),
+            // Line of divide
+            Divider(),
+            const SizedBox(height: 16),
+            Text(
+              'About',
+              style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Web and native application developer, I am available for any work using flutter.\nI am coming from Epitech school and I am in my 3rd year.',
+              style: TextStyle(fontSize: 18, height: 1.4),
+            ),
+          ],
+        ),
+      ],
+    ))
   ];
 
   void _onItemTapped(int index) {
