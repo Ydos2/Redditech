@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'subReddit.dart';
+import 'package:redditech/home_page.dart';
 
 enum LoginState { LOG_OUT, LOG_IN }
 var authToken = "";
@@ -26,22 +27,24 @@ String getAuthToken() {
 }
 
 void setAuthToken(String? token) {
-    print("i did set the token :D");
-    authToken = token == null ? "null" : token;
+  print("i did set the token :D");
+  authToken = token == null ? "null" : token;
 }
 
 Future<void> retrieveToken(String code) async {
   String username = 'BFZHFNgg7jaA56q4idvvyg';
   String password = 'GIGTERPAvmnhm6znH1zo8cWYsx6Rxg';
-  String basicAuth = 'Basic ' + base64Encode(utf8.encode('$username:$password'));
+  String basicAuth =
+      'Basic ' + base64Encode(utf8.encode('$username:$password'));
   print(basicAuth);
 
   var url = Uri.parse("https://www.reddit.com/api/v1/access_token");
   final rsp = await http.post(
     Uri.parse('https://www.reddit.com/api/v1/access_token'),
-    headers: { "authorization": basicAuth,
-      },
-      body: {
+    headers: {
+      "authorization": basicAuth,
+    },
+    body: {
       "grant_type": "authorization_code",
       "code": code,
       "redirect_uri": "http://localhost:8080",
@@ -60,7 +63,6 @@ Future<void> retrieveToken(String code) async {
   }
 }
 
-
 class TokenAskState extends State<TokenAsk> {
   final Completer<WebViewController> control = Completer<WebViewController>();
   LoginState _state = LoginState.LOG_OUT;
@@ -73,36 +75,42 @@ class TokenAskState extends State<TokenAsk> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: WebView(initialUrl: askAccess(),
-        javascriptMode: JavascriptMode.unrestricted, onWebViewCreated: (controller) {
-          control.complete(controller);
-        },
-        onPageStarted: (url) {
-          if (url.contains("access_token=")) {
-            Uri link = Uri.dataFromString(url.replaceFirst('#', '?'));
-            setState(() {
-              setAuthToken(link.queryParameters["access_token"]);
-            });
-            print(link);
-            print(authToken);
-            var sub = new subReddit("python");
-            sub.getHot();
-            return;
-          } if (url.contains("code=")) {
-              print (url);
-              Uri link = Uri.dataFromString(url.substring(0, url.length - 2));
-              var code;
-              setState(() {
-                code = link.queryParameters["code"];
-              });
-              retrieveToken(code);
-              var sub = new subReddit("test");
-              sub.getHot();
-          }
-        }));
+    return Scaffold(
+        body: WebView(
+            initialUrl: askAccess(),
+            javascriptMode: JavascriptMode.unrestricted,
+            onWebViewCreated: (controller) {
+              control.complete(controller);
+            },
+            onPageStarted: (url) {
+              if (url.contains("access_token=")) {
+                Uri link = Uri.dataFromString(url.replaceFirst('#', '?'));
+                setState(() {
+                  setAuthToken(link.queryParameters["access_token"]);
+                });
+                return runApp(MyApp());
+
+                print(link);
+                print(authToken);
+                var sub = new subReddit("python");
+                sub.getHot();
+              }
+              if (url.contains("code=")) {
+                print(url);
+                Uri link = Uri.dataFromString(url.substring(0, url.length - 2));
+                var code;
+                setState(() {
+                  code = link.queryParameters["code"];
+                });
+                retrieveToken(code);
+                var sub = new subReddit("test");
+                sub.getHot();
+
+                return runApp(MyApp());
+              }
+            }));
   }
 }
-
 
 String addArgsToUrl(String baseUrl, Map<String, String> args) {
   baseUrl += "?";
@@ -122,7 +130,8 @@ String askAccess() {
     'state': 'eeeeee',
     'redirect_uri': 'http://localhost:8080',
     'duration': 'permanent',
-    'scope': 'identity,edit,flair,history,modconfig,modflair,modlog,modposts,modwiki,mysubreddits,privatemessages,read,report,save,submit,subscribe,vote,wikiedit,wikiread'
+    'scope':
+        'identity,edit,flair,history,modconfig,modflair,modlog,modposts,modwiki,mysubreddits,privatemessages,read,report,save,submit,subscribe,vote,wikiedit,wikiread'
   };
   print(addArgsToUrl(url, data));
   return addArgsToUrl(url, data);

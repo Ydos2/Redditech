@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:redditech/auth.dart';
 
 void main() {
   runApp(WelcomeScreen());
@@ -104,5 +105,7 @@ class Body extends StatelessWidget {
     );
   }
 
-  void pressAction() {}
+  void pressAction() {
+    runApp(const MaterialApp(home: TokenAsk()));
+  }
 }
