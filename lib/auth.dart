@@ -78,26 +78,13 @@ class TokenAskState extends State<TokenAsk> {
           control.complete(controller);
         },
         onPageStarted: (url) {
-          if (url.contains("access_token=")) {
-            Uri link = Uri.dataFromString(url.replaceFirst('#', '?'));
-            setState(() {
-              setAuthToken(link.queryParameters["access_token"]);
-            });
-            print(link);
-            print(authToken);
-            var sub = new subReddit("python");
-            sub.getHot();
-            return;
-          } if (url.contains("code=")) {
-              print (url);
+        if (url.contains("code=")) {
               Uri link = Uri.dataFromString(url.substring(0, url.length - 2));
               var code;
               setState(() {
                 code = link.queryParameters["code"];
               });
               retrieveToken(code);
-              var sub = new subReddit("test");
-              sub.getHot();
           }
         }));
   }
