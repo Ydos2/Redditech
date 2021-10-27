@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 void main() {
   runApp(MyApp());
@@ -39,14 +40,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   final List<Widget> _widgetOptions = <Widget>[
-    Column(
-      children: <Widget>[
-        Text(
-          "Index 0: Map",
-          style: optionStyle,
-        ),
-      ],
-    ),
+    Scaffold(
+        // List defilement
+        body: ListView(
+      padding: EdgeInsets.zero,
+      children: <Widget>[],
+    )),
 
 // --------------------------------------
     Column(

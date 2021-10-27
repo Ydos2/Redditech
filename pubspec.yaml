@@ -73,6 +73,9 @@ flutter:
     - assets/images/Image1460.png
     - assets/images/Image1461.png
     - assets/images/vector.svg
+    - assets/images/main_top.png
+    - assets/images/main_bottom.png
+    - assets/images/reddit-4.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
