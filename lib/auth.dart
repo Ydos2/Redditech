@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'subReddit.dart';
 import "Profile.dart";
-import "settings.dart";
+import "SettingClass.dart";
 import 'package:redditech/home_page.dart';
 
 enum LoginState { LOG_OUT, LOG_IN }
