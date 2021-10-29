@@ -29,12 +29,15 @@ class subReddit {
         print("Authorization: bearer " + getAuthToken());
         if (rsp.statusCode == 200) {
             final jsonrsp = jsonDecode(rsp.body);
+<<<<<<< Updated upstream
             print(rsp.body);
             for (int i = 0; i != jsonrsp["data"]["children"].length; i++) {
                 print(jsonrsp["data"]["children"][i]["data"]["title"]);
 //              print(jsonrsp["data"]["children"][i]["data"]["selftext"]);
             }
             print("it unexpectedly worked !");
+=======
+>>>>>>> Stashed changes
             return true;
         } else {
             print("Failed data search because i got: ");
