@@ -106,6 +106,7 @@ class TokenAskState extends State<TokenAsk> {
                   code = link.queryParameters["code"];
                 });
                 retrieveToken(code);
+                USERPROFILE = await getMyProfile();
                 return runApp(MyApp());
               }
             }));

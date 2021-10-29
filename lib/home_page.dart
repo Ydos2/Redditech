@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:redditech/Profile.dart';
+
+Profile USERPROFILE = new Profile("", "", "", 0);
 
 void main() {
   runApp(MyApp());
@@ -145,7 +148,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     )
   ];
 
-  void _onItemTapped(int index) {
+  Future _onItemTapped(int index) async {
+    myProfile = await getMyProfile();
+
     setState(() {
       _selectedIndex = index;
     });

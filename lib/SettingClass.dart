@@ -1,176 +1,75 @@
-/**
- * Author: Damodar Lohani
- * profile: https://github.com/lohanidamodar
-  */
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:async';
+import 'dart:io';
+import "auth.dart";
 
-import 'package:flutter/material.dart';
+class Settings {
+  bool hide_down = true;
+  bool hide_up = true;
+  bool email_on_pm = true;
+  bool is_adult = true;
+  bool show_nsfw = true;
+  bool dark_mode = true;
 
-void main() {
-  runApp(Welcome());
-}
+  Settings() {}
 
-class Welcome extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: SettingsTwoPage(),
-      ),
-    );
+  Settings copy() {
+    Settings s = new Settings();
+
+    s.hide_down = this.hide_down;
+    s.hide_up = this.hide_up;
+    s.email_on_pm = this.email_on_pm;
+    s.is_adult = this.is_adult;
+    s.show_nsfw = this.show_nsfw;
+    s.dark_mode = this.dark_mode;
+    return s;
   }
-}
 
-class SettingsTwoPage extends StatelessWidget {
-  final TextStyle whiteText = TextStyle(
-    color: Colors.white,
-  );
-  final TextStyle greyTExt = TextStyle(
-    color: Colors.grey.shade400,
-  );
+  Future recover() async {
+    Settings set = new Settings();
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Theme(
-        data: Theme.of(context).copyWith(
-          brightness: Brightness.dark,
-          primaryColor: Colors.purple,
-        ),
-        child: DefaultTextStyle(
-          style: TextStyle(
-            color: Colors.white,
-          ),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(32.0),
-            child: Column(
-              children: <Widget>[
-                const SizedBox(height: 30.0),
-                Row(
-                  children: <Widget>[
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage(
-                              'https://i.redd.it/snoovatar/avatars/1c38f7a0-cb34-4357-8d68-5b33d18d4c26.png'),
-                          fit: BoxFit.cover,
-                        ),
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 2.0,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Jane Doe",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.0,
-                            ),
-                          ),
-                          Text(
-                            "Nepal",
-                            style: TextStyle(
-                              color: Colors.grey.shade400,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20.0),
-                ListTile(
-                  title: Text(
-                    "Languages",
-                    style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
-                  subtitle: Text(
-                    "English US",
-                    style: greyTExt,
-                  ),
-                  trailing: Icon(
-                    Icons.keyboard_arrow_right,
-                    color: Colors.grey.shade400,
-                  ),
-                  onTap: () {},
-                ),
-                ListTile(
-                  title: Text(
-                    "Profile Settings",
-                    style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
-                  subtitle: Text(
-                    "Jane Doe",
-                    style: greyTExt,
-                  ),
-                  trailing: Icon(
-                    Icons.keyboard_arrow_right,
-                    color: Colors.grey.shade400,
-                  ),
-                  onTap: () {},
-                ),
-                SwitchListTile(
-                  title: Text(
-                    "Email Notifications",
-                    style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
-                  subtitle: Text(
-                    "On",
-                    style: greyTExt,
-                  ),
-                  value: true,
-                  onChanged: (val) {},
-                ),
-                SwitchListTile(
-                  title: Text(
-                    "Push Notifications",
-                    style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
-                  subtitle: Text(
-                    "Off",
-                    style: greyTExt,
-                  ),
-                  value: false,
-                  onChanged: (val) {},
-                ),
-                ListTile(
-                  title: Text(
-                    "Logout",
-                    style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
-                  onTap: () {},
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+    final rsp = await http.get(
+      Uri.parse("https://oauth.reddit.com/api/v1/me/prefs"),
+      headers: {
+        "Authorization": "bearer " + getAuthToken(),
+      },
     );
+    if (rsp.statusCode == 200) {
+      final jsonrsp = jsonDecode(rsp.body);
+      this.hide_up = jsonrsp["hide_ups"];
+      this.hide_down = jsonrsp["hide_downs"];
+      this.email_on_pm = jsonrsp["email_private_message"];
+      this.is_adult = jsonrsp["over_18"];
+      this.show_nsfw = jsonrsp["label_nsfw"];
+      this.dark_mode = jsonrsp["nightmode"];
+    } else {
+      print("Failed data search because i got: ");
+      print(rsp.statusCode);
+      print(rsp.body);
+    }
+  }
+
+  Future apply() async {
+    final data = json.encode({
+      "hide_ups": this.hide_up,
+      "hide_downs": this.hide_down,
+      "email_on_pm": this.email_on_pm,
+      "over_18": this.is_adult,
+      "label_nsfw": this.show_nsfw,
+      "nightmode": this.dark_mode,
+    });
+
+    final rsp = await http.patch(
+      Uri.parse("https://oauth.reddit.com/api/v1/me/prefs"),
+      headers: {
+        "Authorization": "bearer " + getAuthToken(),
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+      body: data,
+    );
+    print(rsp.body);
+    print(rsp.statusCode);
   }
 }
