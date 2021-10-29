@@ -9,6 +9,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'subReddit.dart';
+import "Profile.dart";
+import "settings.dart";
 import 'package:redditech/home_page.dart';
 
 enum LoginState { LOG_OUT, LOG_IN }
@@ -22,13 +24,12 @@ class TokenAsk extends StatefulWidget {
 }
 
 String getAuthToken() {
-  print("authToken: " + authToken);
   return (authToken);
 }
 
 void setAuthToken(String? token) {
-  print("i did set the token :D");
   authToken = token == null ? "null" : token;
+  print("Token has been set to: " + authToken);
 }
 
 Future<void> retrieveToken(String code) async {
@@ -52,7 +53,6 @@ Future<void> retrieveToken(String code) async {
   );
   if (rsp.statusCode == 200) {
     final jsonrsp = jsonDecode(rsp.body);
-    print(jsonrsp["access_token"]);
     setAuthToken(jsonrsp["access_token"]);
     return;
   } else {
@@ -61,6 +61,22 @@ Future<void> retrieveToken(String code) async {
     print(rsp.body);
     return;
   }
+}
+
+String askAccess() {
+  String url = "https://www.reddit.com/api/v1/authorize";
+
+  Map<String, String> data = {
+    'client_id': 'BFZHFNgg7jaA56q4idvvyg',
+    'response_type': 'code',
+    'state': 'eeeeee',
+    'redirect_uri': 'http://localhost:8080',
+    'duration': 'permanent',
+    'scope':
+        'identity,edit,flair,history,modconfig,modflair,modlog,modposts,modwiki,mysubreddits,privatemessages,read,report,save,submit,subscribe,vote,wikiedit,wikiread,account'
+  };
+  print(addArgsToUrl(url, data));
+  return addArgsToUrl(url, data);
 }
 
 class TokenAskState extends State<TokenAsk> {
@@ -83,29 +99,13 @@ class TokenAskState extends State<TokenAsk> {
               control.complete(controller);
             },
             onPageStarted: (url) {
-              if (url.contains("access_token=")) {
-                Uri link = Uri.dataFromString(url.replaceFirst('#', '?'));
-                setState(() {
-                  setAuthToken(link.queryParameters["access_token"]);
-                });
-                return runApp(MyApp());
-
-                print(link);
-                print(authToken);
-                var sub = new subReddit("python");
-                sub.getHot();
-              }
               if (url.contains("code=")) {
-                print(url);
                 Uri link = Uri.dataFromString(url.substring(0, url.length - 2));
                 var code;
                 setState(() {
                   code = link.queryParameters["code"];
                 });
                 retrieveToken(code);
-                var sub = new subReddit("test");
-                sub.getHot();
-
                 return runApp(MyApp());
               }
             }));
@@ -118,23 +118,8 @@ String addArgsToUrl(String baseUrl, Map<String, String> args) {
     baseUrl += "$key=$value&";
   });
   baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+  print(baseUrl);
   return (baseUrl);
-}
-
-String askAccess() {
-  String url = "https://www.reddit.com/api/v1/authorize";
-
-  Map<String, String> data = {
-    'client_id': 'BFZHFNgg7jaA56q4idvvyg',
-    'response_type': 'code',
-    'state': 'eeeeee',
-    'redirect_uri': 'http://localhost:8080',
-    'duration': 'permanent',
-    'scope':
-        'identity,edit,flair,history,modconfig,modflair,modlog,modposts,modwiki,mysubreddits,privatemessages,read,report,save,submit,subscribe,vote,wikiedit,wikiread'
-  };
-  print(addArgsToUrl(url, data));
-  return addArgsToUrl(url, data);
 }
 
 void main() => runApp(const MaterialApp(home: TokenAsk()));

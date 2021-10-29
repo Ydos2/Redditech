@@ -25,9 +25,7 @@ class subReddit {
         );
         print("Authorization: bearer " + getAuthToken());
         if (rsp.statusCode == 200) {
-            final jsonrps = jsonDecode(rsp.body);
-            print(rsp.body);
-            print("it unexpectedly worked !");
+            final jsonrsp = jsonDecode(rsp.body);
             return true;
         } else {
             print("Failed data search because i got: ");
