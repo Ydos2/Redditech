@@ -89,19 +89,26 @@ class TokenAskState extends State<TokenAsk> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: WebView(initialUrl: askAccess(),
-        javascriptMode: JavascriptMode.unrestricted, onWebViewCreated: (controller) {
-          control.complete(controller);
-        },
-        onPageStarted: (url) {
-        if (url.contains("code=")) {
-              Uri link = Uri.dataFromString(url.substring(0, url.length - 2));
-              var code;
-              setState(() {
-                code = link.queryParameters["code"];
-              });
-              retrieveToken(code);
-              return runApp(MyApp());
+    return Scaffold(
+        body: WebView(
+            initialUrl: askAccess(),
+            javascriptMode: JavascriptMode.unrestricted,
+            onWebViewCreated: (controller) {
+              control.complete(controller);
+            },
+            onPageStarted: (url) async {
+              if (url.contains("code=")) {
+                print(url);
+                Uri link = Uri.dataFromString(url.substring(0, url.length - 2));
+                var code;
+                setState(() {
+                  code = link.queryParameters["code"];
+                });
+                await retrieveToken(code);
+                var prof = getMyProfile();
+                return runApp(MyApp());
+              }
+            }));
           }
         }));
   }
