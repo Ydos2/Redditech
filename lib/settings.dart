@@ -14,13 +14,16 @@ class Settings {
 
     Settings() {}
 
-    Settings(Settings s) {
-        this.hide_down = s.hide_down;
-        this.hide_up = s.hide_up;
-        this.email_on_pm = s.email_on_pm;
-        this.is_adult = s.is_adult;
-        this.show_nsfw = s.show_nsfw;
-        this.dark_mode = s.dark_mode;
+    Settings copy() {
+        Settings s = new Settings();
+
+        s.hide_down = this.hide_down;
+        s.hide_up = this.hide_up;
+        s.email_on_pm = this.email_on_pm;
+        s.is_adult = this.is_adult;
+        s.show_nsfw = this.show_nsfw;
+        s.dark_mode = this.dark_mode;
+        return s;
     }
 
     Future recover() async {

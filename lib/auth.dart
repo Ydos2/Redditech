@@ -9,12 +9,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'subReddit.dart';
-<<<<<<< Updated upstream
-=======
 import "Profile.dart";
 import "settings.dart";
 import 'package:redditech/home_page.dart';
->>>>>>> Stashed changes
 
 enum LoginState { LOG_OUT, LOG_IN }
 var authToken = "";
@@ -31,13 +28,8 @@ String getAuthToken() {
 }
 
 void setAuthToken(String? token) {
-<<<<<<< Updated upstream
-    print("i did set the token :D");
-    authToken = token == null ? "null" : token;
-=======
   authToken = token == null ? "null" : token;
   print("Token has been set to: " + authToken);
->>>>>>> Stashed changes
 }
 
 Future<void> retrieveToken(String code) async {
@@ -69,8 +61,6 @@ Future<void> retrieveToken(String code) async {
   }
 }
 
-<<<<<<< Updated upstream
-=======
 String askAccess() {
   String url = "https://www.reddit.com/api/v1/authorize";
 
@@ -86,7 +76,6 @@ String askAccess() {
   print(addArgsToUrl(url, data));
   return addArgsToUrl(url, data);
 }
->>>>>>> Stashed changes
 
 class TokenAskState extends State<TokenAsk> {
   final Completer<WebViewController> control = Completer<WebViewController>();
@@ -100,7 +89,6 @@ class TokenAskState extends State<TokenAsk> {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< Updated upstream
     return Scaffold(body: WebView(initialUrl: askAccess(),
         javascriptMode: JavascriptMode.unrestricted, onWebViewCreated: (controller) {
           control.complete(controller);
@@ -113,30 +101,9 @@ class TokenAskState extends State<TokenAsk> {
                 code = link.queryParameters["code"];
               });
               retrieveToken(code);
+              return runApp(MyApp());
           }
         }));
-=======
-    return Scaffold(
-        body: WebView(
-            initialUrl: askAccess(),
-            javascriptMode: JavascriptMode.unrestricted,
-            onWebViewCreated: (controller) {
-              control.complete(controller);
-            },
-            onPageStarted: (url) async {
-              if (url.contains("code=")) {
-                print(url);
-                Uri link = Uri.dataFromString(url.substring(0, url.length - 2));
-                var code;
-                setState(() {
-                  code = link.queryParameters["code"];
-                });
-                await retrieveToken(code);
-                var prof = getMyProfile();
-                return runApp(MyApp());
-              }
-           }));
->>>>>>> Stashed changes
   }
 }
 
@@ -151,22 +118,4 @@ String addArgsToUrl(String baseUrl, Map<String, String> args) {
   return (baseUrl);
 }
 
-<<<<<<< Updated upstream
-String askAccess() {
-  String url = "https://www.reddit.com/api/v1/authorize";
-
-  Map<String, String> data = {
-    'client_id': 'BFZHFNgg7jaA56q4idvvyg',
-    'response_type': 'code',
-    'state': 'eeeeee',
-    'redirect_uri': 'http://localhost:8080',
-    'duration': 'permanent',
-    'scope': 'identity,edit,flair,history,modconfig,modflair,modlog,modposts,modwiki,mysubreddits,privatemessages,read,report,save,submit,subscribe,vote,wikiedit,wikiread'
-  };
-  print(addArgsToUrl(url, data));
-  return addArgsToUrl(url, data);
-}
-
-=======
->>>>>>> Stashed changes
 void main() => runApp(const MaterialApp(home: TokenAsk()));
