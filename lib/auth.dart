@@ -98,15 +98,16 @@ class TokenAskState extends State<TokenAsk> {
             onWebViewCreated: (controller) {
               control.complete(controller);
             },
-            onPageStarted: (url) {
+            onPageStarted: (url) async {
               if (url.contains("code=")) {
+                print(url);
                 Uri link = Uri.dataFromString(url.substring(0, url.length - 2));
                 var code;
                 setState(() {
                   code = link.queryParameters["code"];
                 });
-                retrieveToken(code);
-                USERPROFILE = await getMyProfile();
+                await retrieveToken(code);
+                var prof = getMyProfile();
                 return runApp(MyApp());
               }
             }));

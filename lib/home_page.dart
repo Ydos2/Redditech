@@ -85,7 +85,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               color: Colors.grey,
               margin: EdgeInsets.only(bottom: bottom),
               child: Image.network(
-                'https://styles.redditmedia.com/t5_i703r/styles/profileBanner_vbsd6d5xelv51.jpg?width=1280&height=384&crop=1280:384,smart&s=8954ada843a7e6ed9827a5f41ca235d448fd1d6d',
+                USERPROFILE.bannerUrl,
                 width: double.infinity,
                 height: coverHeight,
                 fit: BoxFit.cover,
@@ -149,7 +149,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   ];
 
   Future _onItemTapped(int index) async {
-    myProfile = await getMyProfile();
+    USERPROFILE = await getMyProfile();
 
     setState(() {
       _selectedIndex = index;
