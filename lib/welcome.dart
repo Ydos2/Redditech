@@ -1,11 +1,23 @@
+/**
+ * @file main.dart
+ * Main page with the login and connection
+ */
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:redditech/auth.dart';
 
+/**
+ * Main function
+ * Run the WelcomeScreen class
+ */
 void main() {
   runApp(WelcomeScreen());
 }
 
+/**
+ * Welcome screen with front of page
+ */
 class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -18,6 +30,9 @@ class WelcomeScreen extends StatelessWidget {
   }
 }
 
+/**
+ * Body of page
+ */
 class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -88,6 +103,10 @@ class Body extends StatelessWidget {
     );
   }
 
+  /**
+   * newElevatedButton create a new login button
+   * Return the Widget
+   */
   Widget newElevatedButton() {
     return ElevatedButton(
       child: Text(
@@ -105,6 +124,9 @@ class Body extends StatelessWidget {
     );
   }
 
+  /**
+   * Call action for the button
+   */
   void pressAction() {
     runApp(const MaterialApp(home: TokenAsk()));
   }
