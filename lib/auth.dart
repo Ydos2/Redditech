@@ -107,16 +107,7 @@ class TokenAskState extends State<TokenAsk> {
                   code = link.queryParameters["code"];
                 });
                 await retrieveToken(code);
-                var sub = new subReddit("python");
-                await sub.getHot();
-                for (int i = 0; i != sub.posts.length; i++) {
-                  print("----====[Post]====---- ");
-                  print(sub.posts[i].title);
-                  print(sub.posts[i].subtext);
-                  print(sub.posts[i].imageUrl);
-                  print(sub.posts[i].upvotes);
-                  print("----====[END]====----");
-                }
+                var sub = new subReddit("memes");
                 var prof = getMyProfile();
                 USERPROFILE = await getMyProfile();
                 return runApp(MyApp());
