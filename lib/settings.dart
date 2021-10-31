@@ -29,10 +29,6 @@ class WelcomeScreen extends StatelessWidget {
 }
 
 class SettingsTwoPage extends StatelessWidget {
-  static final String path = "lib/src/pages/settings/settings2.dart";
-  final TextStyle whiteText = TextStyle(
-    color: Colors.white,
-  );
   final TextStyle greyTExt = TextStyle(
     color: Colors.grey.shade400,
   );

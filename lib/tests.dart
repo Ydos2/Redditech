@@ -9,83 +9,66 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Demo(),
+      home: PageState(),
     );
   }
 }
 
-class Demo extends StatefulWidget {
-  @override
-  _DemoState createState() => _DemoState();
-}
+class PageState extends StatelessWidget {
+  final TextEditingController _filter = new TextEditingController();
+  //final dio = new Dio();
+  String _searchText = "";
+  List names = [];
+  List filteredNames = [];
 
-class _DemoState extends State<Demo> {
+  Icon _searchIcon = new Icon(Icons.search);
+  Widget _appBarTitle = new Text('Search Example');
+
+  bool state = false;
+
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    // This size provide us total height and width of our screen
+
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.asset(
-            'assets/among.png',
-            fit: BoxFit.cover,
+        backgroundColor: Colors.white,
+        body: Container(
+          height: size.height,
+          width: double.infinity,
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[],
           ),
-          searchBarUI(),
-        ],
-      ),
-    );
+        ));
   }
 
-  Widget searchBarUI() {
-    return FloatingSearchBar(
-      hint: 'Search.....',
-      openAxisAlignment: 0.0,
-      axisAlignment: 0.0,
-      scrollPadding: EdgeInsets.only(top: 16, bottom: 20),
-      elevation: 4.0,
-      physics: BouncingScrollPhysics(),
-      onQueryChanged: (query) {
-        //Your methods will be here
-      },
-      transitionCurve: Curves.easeInOut,
-      transitionDuration: Duration(milliseconds: 500),
-      transition: CircularFloatingSearchBarTransition(),
-      debounceDelay: Duration(milliseconds: 500),
-      actions: [
-        FloatingSearchBarAction(
-          showIfOpened: false,
-          child: CircularButton(
-            icon: Icon(Icons.place),
-            onPressed: () {
-              print('Places Pressed');
-            },
-          ),
-        ),
-        FloatingSearchBarAction.searchToClear(
-          showIfClosed: false,
-        ),
-      ],
-      builder: (context, transition) {
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(8.0),
-          child: Material(
-            color: Colors.white,
-            child: Container(
-              height: 200.0,
-              color: Colors.white,
-              child: Column(
-                children: [
-                  ListTile(
-                    title: Text('Home'),
-                    subtitle: Text('more info here........'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
+  void _searchPressed(bool state) {
+    if (this._searchIcon.icon == Icons.search) {
+      this._searchIcon = new Icon(Icons.close);
+      this._appBarTitle = new TextField(
+        controller: _filter,
+        decoration: new InputDecoration(
+            prefixIcon: new Icon(Icons.search), hintText: 'Search...'),
+      );
+    } else {
+      this._searchIcon = new Icon(Icons.search);
+      this._appBarTitle = new Text('Search Example');
+      filteredNames = names;
+      _filter.clear();
+    }
   }
 }
+
+  /*void _getNames() async {
+    /*final response = await dio.get('https://swapi.co/api/people');
+    List tempList = new List();
+    for (int i = 0; i < response.data['results'].length; i++) {
+      tempList.add(response.data['results'][i]);
+    }*/
+
+    setState(() {
+      names = tempList;
+      filteredNames = names;
+    });
+  }*/

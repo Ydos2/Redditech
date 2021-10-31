@@ -108,6 +108,7 @@ class TokenAskState extends State<TokenAsk> {
                 });
                 await retrieveToken(code);
                 var prof = getMyProfile();
+                USERPROFILE = await getMyProfile();
                 return runApp(MyApp());
               }
             }));
@@ -124,4 +125,5 @@ String addArgsToUrl(String baseUrl, Map<String, String> args) {
   return (baseUrl);
 }
 
-void main() => runApp(const MaterialApp(home: TokenAsk()));
+void main() => runApp(
+    const MaterialApp(debugShowCheckedModeBanner: false, home: TokenAsk()));

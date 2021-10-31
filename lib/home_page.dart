@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:redditech/Profile.dart';
 
-Profile USERPROFILE = new Profile("", "", "", 0);
+Profile USERPROFILE = Profile("", "", "", 0);
 
 void main() {
   runApp(MyApp());
@@ -34,6 +34,7 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   int _selectedIndex = 0;
 
+  static String imageUrl = "";
   static double coverHeight = 180;
   static double profileHeight = 144;
   static double top = coverHeight - profileHeight / 2;
@@ -97,8 +98,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               child: CircleAvatar(
                 radius: profileHeight / 2,
                 backgroundColor: Colors.transparent,
-                backgroundImage: NetworkImage(
-                    'https://i.redd.it/snoovatar/avatars/1c38f7a0-cb34-4357-8d68-5b33d18d4c26.png'),
+                backgroundImage: NetworkImage(USERPROFILE.imageUrl),
               ),
             )
           ],
@@ -107,7 +107,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         Column(
           children: [
             Text(
-              'Alexandre Flion',
+              USERPROFILE.username,
               style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -115,13 +115,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Software Engineer',
+              'Karma : ' + USERPROFILE.karma.toString(),
               style: TextStyle(fontSize: 20, color: Colors.black),
             ),
             const SizedBox(height: 16),
             // Line of divide
             Divider(),
-            const SizedBox(height: 16),
+            const SizedBox(
+                height:
+                    16), /*
             Text(
               'About',
               style: TextStyle(
@@ -133,24 +135,148 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             Text(
               'Web and native application developer, I am available for any work using flutter.\nI am coming from Epitech school and I am in my 3rd year.',
               style: TextStyle(fontSize: 18, height: 1.4),
-            ),
+            ),*/
           ],
         ),
       ],
     )),
 
 // --------------------------------------
-    Column(
-      children: <Widget>[
-        Text("Index 4: Settings", style: optionStyle),
-        FlutterLogo(),
-      ],
+    Scaffold(
+      backgroundColor: Colors.white,
+      body: Container(
+        child: DefaultTextStyle(
+          style: TextStyle(
+            color: Colors.black,
+          ),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(32.0),
+            child: Column(
+              children: <Widget>[
+                const SizedBox(height: 30.0),
+                SwitchListTile(
+                  title: Text(
+                    "Hide down vote",
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    "On",
+                    style: TextStyle(
+                      color: Colors.grey.shade400,
+                    ),
+                  ),
+                  value: true,
+                  onChanged: (val) {
+                    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                  },
+                ),
+                SwitchListTile(
+                  title: Text(
+                    "Hide up vote",
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    "Off",
+                    style: TextStyle(
+                      color: Colors.grey.shade400,
+                    ),
+                  ),
+                  value: false,
+                  onChanged: (val) {},
+                ),
+                SwitchListTile(
+                  title: Text(
+                    "Send email on private message",
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    "On",
+                    style: TextStyle(
+                      color: Colors.grey.shade400,
+                    ),
+                  ),
+                  value: true,
+                  onChanged: (val) {},
+                ),
+                SwitchListTile(
+                  title: Text(
+                    "Over 18",
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    "On",
+                    style: TextStyle(
+                      color: Colors.grey.shade400,
+                    ),
+                  ),
+                  value: true,
+                  onChanged: (val) {},
+                ),
+                SwitchListTile(
+                  title: Text(
+                    "Show nsfw",
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    "On",
+                    style: TextStyle(
+                      color: Colors.grey.shade400,
+                    ),
+                  ),
+                  value: true,
+                  onChanged: (val) {},
+                ),
+                SwitchListTile(
+                  title: Text(
+                    "Dark mode",
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    "On",
+                    style: TextStyle(
+                      color: Colors.grey.shade400,
+                    ),
+                  ),
+                  value: true,
+                  onChanged: (val) {},
+                ),
+                ListTile(
+                  title: Text(
+                    "Logout",
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  onTap: () {},
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     )
   ];
 
   Future _onItemTapped(int index) async {
-    USERPROFILE = await getMyProfile();
-
     setState(() {
       _selectedIndex = index;
     });
@@ -158,6 +284,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
+    firstRequest();
+
+    //print("im gonna put the " + imageUrl);
+    //print("from the > " + USERPROFILE.imageUrl);
     return Scaffold(
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
@@ -191,5 +321,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         onTap: _onItemTapped,
       ),
     );
+  }
+
+  Future firstRequest() async {
+    USERPROFILE = await getMyProfile();
   }
 }
