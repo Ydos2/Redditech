@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:redditech/Profile.dart';
+import 'package:redditech/SettingClass.dart';
 
 Profile USERPROFILE = Profile("", "", "", 0);
+Settings USERSETTINGS = new Settings();
 
 void main() {
   runApp(MyApp());
@@ -15,6 +17,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    USERSETTINGS.recover();
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: MyStatefulWidget(),
@@ -151,125 +154,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           ),
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(32.0),
-            child: Column(
-              children: <Widget>[
-                const SizedBox(height: 30.0),
-                SwitchListTile(
-                  title: Text(
-                    "Hide down vote",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(
-                    "On",
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                    ),
-                  ),
-                  value: true,
-                  onChanged: (val) {
-                    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                  },
-                ),
-                SwitchListTile(
-                  title: Text(
-                    "Hide up vote",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(
-                    "Off",
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                    ),
-                  ),
-                  value: false,
-                  onChanged: (val) {},
-                ),
-                SwitchListTile(
-                  title: Text(
-                    "Send email on private message",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(
-                    "On",
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                    ),
-                  ),
-                  value: true,
-                  onChanged: (val) {},
-                ),
-                SwitchListTile(
-                  title: Text(
-                    "Over 18",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(
-                    "On",
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                    ),
-                  ),
-                  value: true,
-                  onChanged: (val) {},
-                ),
-                SwitchListTile(
-                  title: Text(
-                    "Show nsfw",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(
-                    "On",
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                    ),
-                  ),
-                  value: true,
-                  onChanged: (val) {},
-                ),
-                SwitchListTile(
-                  title: Text(
-                    "Dark mode",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(
-                    "On",
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                    ),
-                  ),
-                  value: true,
-                  onChanged: (val) {},
-                ),
-                ListTile(
-                  title: Text(
-                    "Logout",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  onTap: () {},
-                ),
-              ],
-            ),
+            child: MyStatefulWi(),
           ),
         ),
       ),
@@ -325,5 +210,180 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   Future firstRequest() async {
     USERPROFILE = await getMyProfile();
+  }
+}
+
+class MyStatefulWi extends StatefulWidget {
+  @override
+  State<MyStatefulWi> createState() => MyStateful();
+}
+
+class MyStateful extends State<MyStatefulWi> {
+  bool _hideDown = USERSETTINGS.hide_down;
+  bool _hideUp = USERSETTINGS.hide_up;
+  bool _email = USERSETTINGS.email_on_pm;
+  bool _over = USERSETTINGS.is_adult;
+  bool _nsfw = USERSETTINGS.show_nsfw;
+  bool _dark = USERSETTINGS.dark_mode;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        const SizedBox(height: 30.0),
+        SwitchListTile(
+          title: const Text(
+            "Hide down vote",
+            style: TextStyle(
+                fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          subtitle: Text(
+            "" + _hideDown.toString(),
+            style: TextStyle(
+              color: Colors.grey.shade400,
+            ),
+          ),
+          value: _hideDown,
+          onChanged: (val) {
+            if (USERSETTINGS.hide_down == false)
+              USERSETTINGS.hide_down = true;
+            else
+              USERSETTINGS.hide_down = false;
+            USERSETTINGS.apply();
+            setState(() {
+              _hideDown = USERSETTINGS.hide_down;
+            });
+          },
+        ),
+        SwitchListTile(
+          title: const Text(
+            "Hide up vote",
+            style: TextStyle(
+                fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          subtitle: Text(
+            "" + _hideUp.toString(),
+            style: TextStyle(
+              color: Colors.grey.shade400,
+            ),
+          ),
+          value: _hideUp,
+          onChanged: (bool value) {
+            if (USERSETTINGS.hide_up == false)
+              USERSETTINGS.hide_up = true;
+            else
+              USERSETTINGS.hide_up = false;
+            USERSETTINGS.apply();
+            setState(() {
+              _hideUp = USERSETTINGS.hide_up;
+            });
+          },
+        ),
+        SwitchListTile(
+          title: const Text(
+            "Send email on private message",
+            style: TextStyle(
+                fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          subtitle: Text(
+            "" + _email.toString(),
+            style: TextStyle(
+              color: Colors.grey.shade400,
+            ),
+          ),
+          value: _email,
+          onChanged: (val) {
+            if (USERSETTINGS.email_on_pm == false)
+              USERSETTINGS.email_on_pm = true;
+            else
+              USERSETTINGS.email_on_pm = false;
+            USERSETTINGS.apply();
+            setState(() {
+              _email = USERSETTINGS.email_on_pm;
+            });
+          },
+        ),
+        SwitchListTile(
+          title: const Text(
+            "Over 18",
+            style: TextStyle(
+                fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          subtitle: Text(
+            "" + _over.toString(),
+            style: TextStyle(
+              color: Colors.grey.shade400,
+            ),
+          ),
+          value: _over,
+          onChanged: (val) {
+            if (USERSETTINGS.is_adult == false)
+              USERSETTINGS.is_adult = true;
+            else
+              USERSETTINGS.is_adult = false;
+            USERSETTINGS.apply();
+            setState(() {
+              _over = USERSETTINGS.is_adult;
+            });
+          },
+        ),
+        SwitchListTile(
+          title: const Text(
+            "Show nsfw",
+            style: TextStyle(
+                fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          subtitle: Text(
+            "" + _nsfw.toString(),
+            style: TextStyle(
+              color: Colors.grey.shade400,
+            ),
+          ),
+          value: _nsfw,
+          onChanged: (val) {
+            if (USERSETTINGS.show_nsfw == false)
+              USERSETTINGS.show_nsfw = true;
+            else
+              USERSETTINGS.show_nsfw = false;
+            USERSETTINGS.apply();
+            setState(() {
+              _nsfw = USERSETTINGS.show_nsfw;
+            });
+          },
+        ),
+        SwitchListTile(
+          title: const Text(
+            "Dark mode",
+            style: TextStyle(
+                fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          subtitle: Text(
+            "" + _dark.toString(),
+            style: TextStyle(
+              color: Colors.grey.shade400,
+            ),
+          ),
+          value: _dark,
+          onChanged: (val) {
+            if (USERSETTINGS.dark_mode == false)
+              USERSETTINGS.dark_mode = true;
+            else
+              USERSETTINGS.dark_mode = false;
+            USERSETTINGS.apply();
+            setState(() {
+              _dark = USERSETTINGS.dark_mode;
+            });
+          },
+        ),
+        ListTile(
+          title: const Text(
+            "Logout",
+            style: TextStyle(
+                fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          onTap: () {},
+        ),
+      ],
+    );
   }
 }
