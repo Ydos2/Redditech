@@ -580,19 +580,21 @@ Widget _buildArticleItem(int index) {
                         // To do
                       },
                     ),
-                    const Text(
-                      '42',
-                      style: TextStyle(
+                    Text(
+                      USERSETTINGS.hide_up ? 'Vote' : '42',
+                      style: const TextStyle(
                           fontSize: 18,
                           color: colorGrey,
                           fontWeight: FontWeight.bold),
                     ),
-                    TextButton(
-                      child: const Icon(Icons.arrow_downward, color: colorGrey),
-                      onPressed: () {
-                        // To do
-                      },
-                    ),
+                    if (USERSETTINGS.hide_down == false)
+                      TextButton(
+                        child:
+                            const Icon(Icons.arrow_downward, color: colorGrey),
+                        onPressed: () {
+                          // To do
+                        },
+                      ),
                   ],
                 ),
               ],
