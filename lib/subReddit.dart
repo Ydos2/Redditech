@@ -14,6 +14,7 @@ class Post {
   String subReddit = "";
   String author = "";
   String subRedImg = "";
+  String id = "";
   bool nsfw = false;
   int upvotes = 0;
 
@@ -25,9 +26,11 @@ class Post {
    * @param poster String that contains the name of ther user that posted this
    * @param upvotes int, it is the numburs of upvotes (or downvotes) on the post
    * @param nsfw bool, true if the content is for adult
+   * @param subRedditImg String, the subReddit img from where the post have been made
+   * @param id String, it is the id of the post, used for the upvote
   */
   Post(String title, String? subtext, String? image, String sub, String poster,
-      int upvotes, bool nsfw, String subRedImg) {
+      int upvotes, bool nsfw, String subRedImg, String id) {
     this.title = title;
     this.subtext = subtext;
     this.imageUrl = image;
@@ -36,6 +39,11 @@ class Post {
     this.author = poster;
     this.nsfw = nsfw;
     this.subRedImg = subRedImg;
+    this.id = id;
+  }
+
+  Future upvote(int request) async {
+    if (request < -1 || request > 1) return;
   }
 }
 
@@ -68,14 +76,15 @@ class subReddit {
       var poster = jsonrsp["data"]["children"][i]["data"]["author"];
       var subreddit = jsonrsp["data"]["children"][i]["data"]["subreddit"];
       var nsfw = jsonrsp["data"]["children"][i]["data"]["over_18"];
+      var id = jsonrsp["dada"]["children"][i]["data"]["name"];
       this.posts.add(new Post(title, text, image == "self" ? null : image,
-          subreddit, poster, upvotes, nsfw, this.imageUrl));
+          subreddit, poster, upvotes, nsfw, this.imageUrl, id));
     }
   }
 
   /** @brief get the informations of the subReddit
    * this function shall be awaited.
-   *  @return true of it succeed, false if the fetch failed (rare)
+   * @return true of it succeed, false if the fetch failed (rare)
    */
   Future<bool> getInfo() async {
     var rsp = await http.get(
@@ -217,7 +226,6 @@ Future<List<Post>> getRandomPosts(List<subReddit> subs) async {
   if (subs.length == 0) return posts;
   for (int i = 0; i != subs.length; i++) {
     await subs[i].getHot();
-    await sub.getInfo();
   }
 
   for (int i = 0; i != 25; i++) {
