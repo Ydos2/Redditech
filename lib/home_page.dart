@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:redditech/Profile.dart';
 import 'package:redditech/SettingClass.dart';
 import 'package:redditech/tests_list.dart';
+import 'package:redditech/subReddit.dart';
 
 Profile USERPROFILE = Profile("", "", "", 0);
 Settings USERSETTINGS = new Settings();
+List<Post> postRand = [];
 
 const Color colorBlack = Colors.black;
 const Color colorWhite = Colors.white;
@@ -15,18 +17,32 @@ void main() {
   runApp(const MyApp());
 }
 
+Future getHomePage() async {
+  USERSETTINGS.recover();
+  return postRand = await getRandomPosts(await getMySubscriptions());
+}
+
+Future<dynamic> callAsyncFetch() =>
+    Future.delayed(Duration(seconds: 1), () => getHomePage());
+
 /// This is the main application widget.
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    USERSETTINGS.recover();
-
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MyStatefulWidget(),
-    );
+  Widget build(context) {
+    return FutureBuilder<dynamic>(
+        future: callAsyncFetch(),
+        builder: (context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.hasData) {
+            return const MaterialApp(
+              debugShowCheckedModeBanner: false,
+              home: MyStatefulWidget(),
+            );
+          } else {
+            return const CircularProgressIndicator();
+          }
+        });
   }
 }
 
@@ -185,7 +201,7 @@ class StatefulHome extends State<HomeState> {
           ),
           body: ListView.separated(
             padding: const EdgeInsets.all(16.0),
-            itemCount: articles.length,
+            itemCount: postRand.length,
             itemBuilder: (context, index) {
               return _buildArticleItem(index);
             },
@@ -489,8 +505,12 @@ class StatefulSettings extends State<SettingsState> {
 }
 
 Widget _buildArticleItem(int index) {
-  final String sample =
-      "https://preview.redd.it/zubomnvmmmq71.png?auto=webp&s=6b01ad4ccbf7d4fa32fb00024bea40174d69c032";
+  final String sample = postRand[index].imageUrl.toString();
+  //"https://preview.redd.it/zubomnvmmmq71.png?auto=webp&s=6b01ad4ccbf7d4fa32fb00024bea40174d69c032";
+
+  if (postRand[index].nsfw == true && USERSETTINGS.show_nsfw == false) {
+    return Container();
+  }
   return Container(
     color: USERSETTINGS.dark_mode ? colorGreyHard : colorWhite,
     child: Stack(
@@ -522,7 +542,8 @@ Widget _buildArticleItem(int index) {
                         Column(
                           children: [
                             Text(
-                              "r/Unity3D",
+                              //"r/Unity3D",
+                              postRand[index].subReddit,
                               style: TextStyle(
                                 color: USERSETTINGS.dark_mode
                                     ? colorWhite
@@ -532,9 +553,10 @@ Widget _buildArticleItem(int index) {
                               ),
                               textAlign: TextAlign.left,
                             ),
-                            const Text(
-                              "Publiée par u/Ydos * 10 mois",
-                              style: TextStyle(
+                            Text(
+                              //"Publiée par u/Ydos * 10 mois",
+                              postRand[index].author,
+                              style: const TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18.0,
@@ -552,7 +574,8 @@ Widget _buildArticleItem(int index) {
                 const SizedBox(height: 8),
                 // Image
                 Text(
-                  "Blablabla dg,jisgpzgjzpogjzpojpz\nolsfkjzpgjpqzgjipoa^qzbripoa^bvniraop^bri\ndpsoqjpqvjpzdvkjpdvjpodvdvsbfs,kl dafspo",
+                  //"Blablabla dg,jisgpzgjzpogjzpojpz\nolsfkjzpgjpqzgjipoa^qzbripoa^bvniraop^bri\ndpsoqjpqvjpzdvkjpdvjpodvdvsbfs,kl dafspo",
+                  postRand[index].subtext.toString(),
                   style: TextStyle(
                     color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
                     fontWeight: FontWeight.normal,
@@ -580,7 +603,10 @@ Widget _buildArticleItem(int index) {
                       },
                     ),
                     Text(
-                      USERSETTINGS.hide_up ? 'Vote' : '42',
+                      //USERSETTINGS.hide_up ? 'Vote' : '42',
+                      USERSETTINGS.hide_up
+                          ? 'Vote'
+                          : postRand[index].upvotes.toString(),
                       style: const TextStyle(
                           fontSize: 18,
                           color: colorGrey,
