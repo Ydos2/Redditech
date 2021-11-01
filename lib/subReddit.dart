@@ -17,6 +17,7 @@ class Post {
   String id = "";
   bool nsfw = false;
   int upvotes = 0;
+  bool? vote = null;
 
   /** @brief Post constructor
    * @param title String containing the title of the post
@@ -28,9 +29,10 @@ class Post {
    * @param nsfw bool, true if the content is for adult
    * @param subRedditImg String, the subReddit img from where the post have been made
    * @param id String, it is the id of the post, used for the upvote
+   * @param vote Boolean, null if nothing, true if liked, false if dislikes
   */
   Post(String title, String? subtext, String? image, String sub, String poster,
-      int upvotes, bool nsfw, String subRedImg, String id) {
+      int upvotes, bool nsfw, String subRedImg, String id, bool? vote) {
     this.title = title;
     this.subtext = subtext;
     this.imageUrl = image;
@@ -40,10 +42,22 @@ class Post {
     this.nsfw = nsfw;
     this.subRedImg = subRedImg;
     this.id = id;
+    this.vote = vote;
   }
 
   Future upvote(int request) async {
-    if (request < -1 || request > 1) return;
+    if (request < -1 || request > 1)
+      return;
+    await http.post(Uri.parse("https://oauth.reddit.com/api/vote"),
+      headers: {"Authorization": "bearer " + getAuthToken(),
+        "X-Modhash": "null",
+      },
+      body: { "dir": request.toString(),
+        "id": this.id,
+        "rank": "1",
+      },
+    );
+    this.vote = request == 1 ? true : request == -1 ? false : null;
   }
 }
 
@@ -77,8 +91,9 @@ class subReddit {
       var subreddit = jsonrsp["data"]["children"][i]["data"]["subreddit"];
       var nsfw = jsonrsp["data"]["children"][i]["data"]["over_18"];
       var id = jsonrsp["data"]["children"][i]["data"]["name"];
+      var liked = jsonrsp["data"]["children"][i]["data"]["likes"];
       this.posts.add(new Post(title, text, image == "self" ? null : image,
-          subreddit, poster, upvotes, nsfw, this.imageUrl, id));
+          subreddit, poster, upvotes, nsfw, this.imageUrl, id, liked));
     }
   }
 
