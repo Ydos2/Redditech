@@ -13,6 +13,7 @@ class Post {
   String? imageUrl = "";
   String subReddit = "";
   String author = "";
+  String subRedImg = "";
   bool nsfw = false;
   int upvotes = 0;
 
@@ -25,7 +26,7 @@ class Post {
    * @param upvotes int, it is the numburs of upvotes (or downvotes) on the post
    * @param nsfw bool, true if the content is for adult
   */
-  Post(String title, String? subtext, String? image, String sub, String poster, int upvotes, bool nsfw) {
+  Post(String title, String? subtext, String? image, String sub, String poster, int upvotes, bool nsfw, String subRedImg) {
     this.title = title;
     this.subtext = subtext;
     this.imageUrl = image;
@@ -33,6 +34,7 @@ class Post {
     this.subReddit = sub;
     this.author = poster;
     this.nsfw = nsfw;
+    this.subRedImg = subRedImg;
   }
 }
 
@@ -65,7 +67,7 @@ class subReddit {
       var poster = jsonrsp["data"]["children"][i]["data"]["author"];
       var subreddit = jsonrsp["data"]["children"][i]["data"]["subreddit"];
       var nsfw = jsonrsp["data"]["children"][i]["data"]["over_18"];
-      this.posts.add(new Post(title, text, image == "self" ? null : image, subreddit, poster, upvotes, nsfw));
+      this.posts.add(new Post(title, text, image == "self" ? null : image, subreddit, poster, upvotes, nsfw, this.imageUrl));
     }
   }
 
