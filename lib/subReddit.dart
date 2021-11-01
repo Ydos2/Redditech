@@ -2,7 +2,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 import 'auth.dart';
+import 'dart:math';
 
+/** @brief This class is used to initialize the subReddit class
+ *
+ */
 class Post {
   String title = "";
   String? subtext = "";
@@ -11,6 +15,14 @@ class Post {
   String author = "";
   int upvotes = 0;
 
+  /** @brief Post constructor
+   * @param title String containing the title of the post
+   * @param subtext String that can be null, containing the subtext
+   * @param image String that can be null, contain the URL a possible image in the post
+   * @param sub String that contains the subreddit it has been posted on
+   * @param poster String that contains the name of ther user that posted this
+   * @param upvotes int, it is the numburs of upvotes (or downvotes) on the post
+  */
   Post(String title, String? subtext, String? image, String sub, String poster, int upvotes) {
     this.title = title;
     this.subtext = subtext;
@@ -89,7 +101,6 @@ class subReddit {
       headers: {"Authorization": "bearer " + getAuthToken(),
       },
     );
-    print("Authorization: bearer " + getAuthToken());
     if (rsp.statusCode == 200) {
       final jsonrsp = jsonDecode(rsp.body);
       _extractPosts(jsonrsp);
@@ -108,7 +119,6 @@ class subReddit {
       headers: {"Authorization": "bearer " + getAuthToken(),
       },
     );
-    print("Authorization: bearer " + getAuthToken());
     if (rsp.statusCode == 200) {
       final jsonrsp = jsonDecode(rsp.body);
       _extractPosts(jsonrsp);
@@ -128,7 +138,6 @@ class subReddit {
       headers: {"Authorization": "bearer " + getAuthToken(),
       },
     );
-    print("Authorization: bearer " + getAuthToken());
     if (rsp.statusCode == 200) {
       final jsonrsp = jsonDecode(rsp.body);
       _extractPosts(jsonrsp);
@@ -140,4 +149,45 @@ class subReddit {
       return false;
     }
   }
+}
+
+Future<List<Post>> getRandomPosts(List<subReddit> subs) async {
+  List<Post> posts = List.empty(growable: true);
+  Random random = new Random();
+
+  if (subs.length == 0)
+    return posts;
+  for (int i = 0; i != subs.length; i++) {
+    await subs[i].getHot();
+  }
+
+  for (int i = 0; i != 25; i++) {
+        var idx = random.nextInt(subs.length);
+        var curr = subs[idx];
+        if (i <= curr.posts.length) {
+            posts.add(curr.posts[i]);
+        }
+  }
+  return posts;
+}
+
+Future<List<subReddit>> getMySubscriptions() async {
+  final rsp = await http.get(
+    Uri.parse("https://oauth.reddit.com/subreddits/mine/subscriber.json"),
+    headers: {"Authorization": "Bearer " + getAuthToken(),
+    },
+  );
+  List<subReddit> ls = List.empty(growable: true);
+
+  if (rsp.statusCode == 200) {
+    final jsonrsp = jsonDecode(rsp.body);
+    for (int i = 0; i < jsonrsp["data"]["children"].length; i++) {
+      ls.add(subReddit(jsonrsp["data"]["children"][i]["data"]["display_name"]));
+    }
+  } else {
+    print("Failed data search because i got: ");
+    print(rsp.statusCode);
+    print(rsp.body);
+  }
+  return ls;
 }
