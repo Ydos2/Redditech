@@ -534,7 +534,7 @@ Widget _buildArticleItem(int index) {
                           backgroundColor:
                               USERSETTINGS.dark_mode ? colorWhite : colorBlack,
                           child: Image.network(
-                            postRand[index].subRedImg.toString(),
+                            postRand[index].imageUrl.toString(),
                             fit: BoxFit.cover,
                           ),
                         ),
