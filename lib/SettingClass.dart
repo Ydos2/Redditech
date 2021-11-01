@@ -12,8 +12,14 @@ class Settings {
   bool show_nsfw = true;
   bool dark_mode = true;
 
+  /** @biref setting constructor
+   * you should call the recover function rigth after
+   */
   Settings() {}
 
+  /** @brief copy the current item
+   * @return a copy of the current item
+   */
   Settings copy() {
     Settings s = new Settings();
 
@@ -26,6 +32,9 @@ class Settings {
     return s;
   }
 
+  /** @brief recover the setting of the current logged-in user
+   * this function shall be awaited
+   */
   Future recover() async {
     Settings set = new Settings();
 
@@ -50,6 +59,9 @@ class Settings {
     }
   }
 
+  /** @brief apply the setting directly to the user's reddit account
+   * this function shall be awaited
+   */
   Future apply() async {
     final data = json.encode({
       "hide_ups": this.hide_up,
