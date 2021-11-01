@@ -201,6 +201,7 @@ Future<List<Post>> getRandomPosts(List<subReddit> subs) async {
     return posts;
   for (int i = 0; i != subs.length; i++) {
     await subs[i].getHot();
+    await sub.getInfo();
   }
 
   for (int i = 0; i != 25; i++) {
