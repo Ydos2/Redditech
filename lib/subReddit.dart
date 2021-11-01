@@ -23,6 +23,10 @@ class Post {
 
 class subReddit {
   String name = "";
+  String description = "";
+  String imageUrl = "";
+  String bannerUrl = "";
+  int nbSub = 0;
   List<Post> posts = new List<Post>.filled(0, Post("", "", "", "", "", 0), growable: true);
 
   subReddit(String name) {
@@ -38,6 +42,28 @@ class subReddit {
       var poster = jsonrsp["data"]["children"][i]["data"]["author"];
       var subreddit = jsonrsp["data"]["children"][i]["data"]["subreddit"];
       this.posts.add(new Post(title, text, image == "self" ? null : image, subreddit, poster, upvotes));
+    }
+  }
+
+  Future<bool> getInfo() async {
+    var rsp = await http.get(Uri.parse("https://oauth.reddit.com/r/" + this.name + "/about"),
+      headers: {"Authorization": "bearer " + getAuthToken(),
+      },
+    );
+    if (rsp.statusCode == 200) {
+      final jsonrsp = jsonDecode(rsp.body);
+      this.imageUrl = jsonrsp["data"]["community_icon"];
+      this.imageUrl = imageUrl.substring(0, imageUrl.indexOf("?"));
+      this.description = jsonrsp["data"]["public_description"];
+      this.bannerUrl = jsonrsp["data"]["banner_background_image"];
+      this.bannerUrl = bannerUrl.substring(0, bannerUrl.indexOf("?"));
+      this.nbSub = jsonrsp["data"]["subscribers"];
+      return true;
+    } else {
+      print("Failed data search because i got: ");
+      print(rsp.statusCode);
+      print(rsp.body);
+      return false;
     }
   }
 

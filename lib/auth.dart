@@ -109,6 +109,12 @@ class TokenAskState extends State<TokenAsk> {
                 await retrieveToken(code);
                 var sub = new subReddit("memes");
                 var prof = getMyProfile();
+                await sub.getInfo();
+                print(sub.name);
+                print(sub.description);
+                print(sub.imageUrl);
+                print(sub.bannerUrl);
+                print(sub.nbSub);
                 USERPROFILE = await getMyProfile();
                 return runApp(MyApp());
               }

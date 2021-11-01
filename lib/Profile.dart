@@ -27,7 +27,6 @@ Future<Profile> getMyProfile() async {
     if (rsp.statusCode == 200) {
       final jsonrsp = jsonDecode(rsp.body);
       String name = jsonrsp["name"];
-      print("u are > " + name);
       String img = jsonrsp["icon_img"];
       String banner = jsonrsp["subreddit"]["banner_img"];
       img = img.substring(0, img.indexOf("?"));
