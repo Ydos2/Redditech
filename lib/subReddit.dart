@@ -13,6 +13,7 @@ class Post {
   String? imageUrl = "";
   String subReddit = "";
   String author = "";
+  bool nsfw = false;
   int upvotes = 0;
 
   /** @brief Post constructor
@@ -23,13 +24,14 @@ class Post {
    * @param poster String that contains the name of ther user that posted this
    * @param upvotes int, it is the numburs of upvotes (or downvotes) on the post
   */
-  Post(String title, String? subtext, String? image, String sub, String poster, int upvotes) {
+  Post(String title, String? subtext, String? image, String sub, String poster, int upvotes, bool nsfw) {
     this.title = title;
     this.subtext = subtext;
     this.imageUrl = image;
     this.upvotes = upvotes;
     this.subReddit = sub;
     this.author = poster;
+    this.nsfw = nsfw;
   }
 }
 
@@ -39,7 +41,7 @@ class subReddit {
   String imageUrl = "";
   String bannerUrl = "";
   int nbSub = 0;
-  List<Post> posts = new List<Post>.filled(0, Post("", "", "", "", "", 0), growable: true);
+  List<Post> posts = List.empty(growable: true);
 
   subReddit(String name) {
     this.name = name;
@@ -53,7 +55,8 @@ class subReddit {
       var upvotes = jsonrsp["data"]["children"][i]["data"]["ups"];
       var poster = jsonrsp["data"]["children"][i]["data"]["author"];
       var subreddit = jsonrsp["data"]["children"][i]["data"]["subreddit"];
-      this.posts.add(new Post(title, text, image == "self" ? null : image, subreddit, poster, upvotes));
+      var nsfw = jsonrsp["data"]["children"][i]["data"]["over_18"];
+      this.posts.add(new Post(title, text, image == "self" ? null : image, subreddit, poster, upvotes, nsfw));
     }
   }
 
