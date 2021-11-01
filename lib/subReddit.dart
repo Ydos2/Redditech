@@ -23,6 +23,7 @@ class Post {
    * @param sub String that contains the subreddit it has been posted on
    * @param poster String that contains the name of ther user that posted this
    * @param upvotes int, it is the numburs of upvotes (or downvotes) on the post
+   * @param nsfw bool, true if the content is for adult
   */
   Post(String title, String? subtext, String? image, String sub, String poster, int upvotes, bool nsfw) {
     this.title = title;
@@ -35,6 +36,11 @@ class Post {
   }
 }
 
+/** @brief subReddit class
+ * This class is used to get the subreddits so you can see the posts from other people
+ * all around the world !
+ */
+
 class subReddit {
   String name = "";
   String description = "";
@@ -43,6 +49,9 @@ class subReddit {
   int nbSub = 0;
   List<Post> posts = List.empty(growable: true);
 
+  /** @brief subReddit constructor
+   * @param name String, contains the name of the subReddit you want to pull informations from
+   */
   subReddit(String name) {
     this.name = name;
   }
@@ -60,6 +69,10 @@ class subReddit {
     }
   }
 
+  /** @brief get the informations of the subReddit
+   * this function shall be awaited.
+   *  @return true of it succeed, false if the fetch failed (rare)
+   */
   Future<bool> getInfo() async {
     var rsp = await http.get(Uri.parse("https://oauth.reddit.com/r/" + this.name + "/about"),
       headers: {"Authorization": "bearer " + getAuthToken(),
@@ -82,6 +95,9 @@ class subReddit {
     }
   }
 
+  /** @brief Make the user unsubcribe to this subReddit
+   * this function shall be awaited.
+   */
   Future unsubscribe() async {
     await http.post(Uri.parse("https://oauth.reddit.com/api/subscribe?action=unsub&action_source=r&skip_initial_defaults=true&sr_name=" + this.name),
         headers: {"Authorization": "bearer " + getAuthToken(),
@@ -90,6 +106,9 @@ class subReddit {
     );
   }
 
+  /** @brief Make the user subcribe to this subReddit
+   * this function shall be awaited.
+   */
   Future subscribe() async {
       await http.post(Uri.parse("https://oauth.reddit.com/api/subscribe?action=sub&action_source=r&skip_initial_defaults=true&sr_name=" + this.name),
       headers: {"Authorization": "bearer " + getAuthToken(),
@@ -98,6 +117,11 @@ class subReddit {
       );
   }
 
+  /** @brief get the top post from this subReddit
+   * automatically fills the "posts" List in the current object
+   * this function shall be awaited.
+   * @return true if it succeed, false it failed
+   */
   Future<bool> getTop() async {
     final rsp = await http.get(
       Uri.parse('https://oauth.reddit.com/r/' + this.name + '/top.json'),
@@ -116,6 +140,11 @@ class subReddit {
     }
   }
 
+  /** @brief get the new post from this subReddit
+   * automatically fills the "posts" List in the current object
+   * this function shall be awaited.
+   * @return true if it succeed, false it failed
+   */
   Future<bool> getNew() async {
     final rsp = await http.get(
       Uri.parse('https://oauth.reddit.com/r/' + this.name + '/new.json'),
@@ -134,8 +163,12 @@ class subReddit {
     }
   }
 
+  /** @brief get the hot post from this subReddit
+   * automatically fills the "posts" List in the current object
+   * this function shall be awaited.
+   * @return true if it succeed, false it failed
+   */
   Future<bool> getHot() async {
-
     final rsp = await http.get(
       Uri.parse('https://oauth.reddit.com/r/' + this.name + '/hot.json'),
       headers: {"Authorization": "bearer " + getAuthToken(),
@@ -154,6 +187,12 @@ class subReddit {
   }
 }
 
+/** @brief get random posts from the list of the subreddits provided
+ * @param subs A list of subReddits that the posts should be fetched from
+ * this function is usually called with getMySubscription() as parameter
+ * this function shall be awaited.
+ * @return a list of new posts randomly picked in the list of subReddit
+ */
 Future<List<Post>> getRandomPosts(List<subReddit> subs) async {
   List<Post> posts = List.empty(growable: true);
   Random random = new Random();
@@ -174,6 +213,10 @@ Future<List<Post>> getRandomPosts(List<subReddit> subs) async {
   return posts;
 }
 
+/** @brief get the subreddit that the logged-in user is subscribed to
+ * this function shall be awaited.
+ * @return a list of new posts randomly picked in the list of subReddit
+ */
 Future<List<subReddit>> getMySubscriptions() async {
   final rsp = await http.get(
     Uri.parse("https://oauth.reddit.com/subreddits/mine/subscriber.json"),

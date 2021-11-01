@@ -108,6 +108,9 @@ class TokenAskState extends State<TokenAsk> {
                 });
                 await retrieveToken(code);
                 var prof = getMyProfile();
+                print("pew");
+                var sub = await getRandomPosts(await getMySubscriptions());
+                print("coucou");
                 USERPROFILE = await getMyProfile();
                 return runApp(MyApp());
               }
