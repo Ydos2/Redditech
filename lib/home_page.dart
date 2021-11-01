@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:redditech/Profile.dart';
 import 'package:redditech/SettingClass.dart';
@@ -506,8 +508,10 @@ class StatefulSettings extends State<SettingsState> {
 
 Widget _buildArticleItem(int index) {
   final String sample = postRand[index].imageUrl.toString();
-  //"https://preview.redd.it/zubomnvmmmq71.png?auto=webp&s=6b01ad4ccbf7d4fa32fb00024bea40174d69c032";
-
+  int vote = 0;
+  print(postRand[index].imageUrl.toString());
+  print(sample);
+  print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
   if (postRand[index].nsfw == true && USERSETTINGS.show_nsfw == false) {
     return Container();
   }
@@ -529,15 +533,6 @@ Widget _buildArticleItem(int index) {
                   children: <Widget>[
                     Row(
                       children: [
-                        CircleAvatar(
-                          radius: 30.0,
-                          backgroundColor:
-                              USERSETTINGS.dark_mode ? colorWhite : colorBlack,
-                          child: Image.network(
-                            postRand[index].imageUrl.toString(),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
                         const SizedBox(width: 8),
                         Column(
                           children: [
@@ -584,12 +579,13 @@ Widget _buildArticleItem(int index) {
                   textAlign: TextAlign.left,
                 ),
                 const SizedBox(height: 12),
-                Image.network(
-                  sample,
-                  fit: BoxFit.cover,
-                  width: 300,
-                  height: 300,
-                ),
+                if (sample != "" && sample.isNotEmpty && sample != "default")
+                  Image.network(
+                    sample,
+                    fit: BoxFit.cover,
+                    width: 300,
+                    height: 300,
+                  ),
                 const SizedBox(height: 8),
                 const Divider(),
                 // Bottom button
@@ -599,14 +595,15 @@ Widget _buildArticleItem(int index) {
                     TextButton(
                       child: const Icon(Icons.arrow_upward, color: colorGrey),
                       onPressed: () {
-                        // To do
+                        postRand[index].upvote(1);
+                        vote = 1;
                       },
                     ),
                     Text(
                       //USERSETTINGS.hide_up ? 'Vote' : '42',
                       USERSETTINGS.hide_up
                           ? 'Vote'
-                          : postRand[index].upvotes.toString(),
+                          : (postRand[index].upvotes + vote).toString(),
                       style: const TextStyle(
                           fontSize: 18,
                           color: colorGrey,
@@ -617,7 +614,8 @@ Widget _buildArticleItem(int index) {
                         child:
                             const Icon(Icons.arrow_downward, color: colorGrey),
                         onPressed: () {
-                          // To do
+                          postRand[index].upvote(-1);
+                          vote = -1;
                         },
                       ),
                   ],

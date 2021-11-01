@@ -76,7 +76,7 @@ class subReddit {
       var poster = jsonrsp["data"]["children"][i]["data"]["author"];
       var subreddit = jsonrsp["data"]["children"][i]["data"]["subreddit"];
       var nsfw = jsonrsp["data"]["children"][i]["data"]["over_18"];
-      var id = jsonrsp["dada"]["children"][i]["data"]["name"];
+      var id = jsonrsp["data"]["children"][i]["data"]["name"];
       this.posts.add(new Post(title, text, image == "self" ? null : image,
           subreddit, poster, upvotes, nsfw, this.imageUrl, id));
     }
