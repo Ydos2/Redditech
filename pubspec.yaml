@@ -39,7 +39,6 @@ dependencies:
   http_auth: any
   flutter_svg: ^0.22.0
   google_fonts: ^2.1.0
-  material_floating_search_bar: ^0.3.5
   universal_html: ^2.0.0
   flutter_inappwebview: any
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:redditech/Profile.dart';
 import 'package:redditech/SettingClass.dart';
-import 'package:redditech/test_List.dart';
+import 'package:redditech/tests_list.dart';
 
 Profile USERPROFILE = Profile("", "", "", 0);
 Settings USERSETTINGS = new Settings();
@@ -489,7 +489,6 @@ class StatefulSettings extends State<SettingsState> {
 }
 
 Widget _buildArticleItem(int index) {
-  Map article = articles[index];
   final String sample =
       "https://preview.redd.it/zubomnvmmmq71.png?auto=webp&s=6b01ad4ccbf7d4fa32fb00024bea40174d69c032";
   return Container(
