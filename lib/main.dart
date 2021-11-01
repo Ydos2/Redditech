@@ -8,14 +8,16 @@ import 'package:redditech/auth.dart';
 /// Main function
 /// Run the WelcomeScreen class
 void main() {
-  runApp(WelcomeScreen());
+  runApp(const WelcomeScreen());
 }
 
 /// Welcome screen with front of page
 class WelcomeScreen extends StatelessWidget {
+  const WelcomeScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: Body(),
@@ -26,6 +28,8 @@ class WelcomeScreen extends StatelessWidget {
 
 /// Body of page
 class Body extends StatelessWidget {
+  const Body({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -58,7 +62,7 @@ class Body extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 16),
-                Text(
+                const Text(
                   'Redditech',
                   style: TextStyle(
                       fontSize: 46,
@@ -67,9 +71,9 @@ class Body extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 // Line of divide
-                Divider(),
+                const Divider(),
                 const SizedBox(height: 16),
-                Text(
+                const Text(
                   "Share, Create and Play",
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                 ),
@@ -80,7 +84,7 @@ class Body extends StatelessWidget {
                 ),
                 SizedBox(height: size.height * 0.14),
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 10),
+                  margin: const EdgeInsets.symmetric(vertical: 10),
                   width: size.width * 0.8,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(29),
@@ -99,14 +103,14 @@ class Body extends StatelessWidget {
   /// Return the Widget
   Widget newElevatedButton() {
     return ElevatedButton(
-      child: Text(
+      child: const Text(
         "LOGIN",
         style: TextStyle(color: Colors.white),
       ),
       onPressed: pressAction,
       style: ElevatedButton.styleFrom(
           primary: Colors.red.shade500,
-          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
           textStyle: TextStyle(
               color: Colors.red.shade500,
               fontSize: 18,
