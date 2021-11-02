@@ -620,7 +620,8 @@ Widget _buildArticleItem(int index) {
                 if (sample != "" &&
                     sample.isNotEmpty &&
                     sample != "default" &&
-                    sample != "null")
+                    sample != "null" &&
+                    sample != "nsfw")
                   Image.network(
                     sample,
                     fit: BoxFit.cover,
@@ -824,7 +825,7 @@ class StatefulSubredditPage extends State<SubredditPageState> {
               ),
               body: ListView.separated(
                 padding: const EdgeInsets.all(16.0),
-                itemCount: subreddit.posts.length + 2,
+                itemCount: subreddit.posts.length,
                 itemBuilder: (context, index) {
                   if (index == 0) {
                     return Stack(
@@ -1009,7 +1010,8 @@ Widget _buildArticleSubreddit(int index, subReddit subreddit) {
                 if (sample != "" &&
                     sample.isNotEmpty &&
                     sample != "default" &&
-                    sample != "null")
+                    sample != "null" &&
+                    sample != "nsfw")
                   Image.network(
                     sample,
                     fit: BoxFit.cover,
