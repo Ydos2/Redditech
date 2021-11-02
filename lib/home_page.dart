@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redditech/Profile.dart';
 import 'package:redditech/SettingClass.dart';
-import 'package:redditech/tests_list.dart';
 import 'package:redditech/subReddit.dart';
 
 Profile USERPROFILE = Profile("", "", "", 0);
@@ -45,7 +44,9 @@ class MyApp extends StatelessWidget {
               home: MyStatefulWidget(),
             );
           } else {
-            return const CircularProgressIndicator();
+            return const CircularProgressIndicator(
+              semanticsLabel: 'Linear progress indicator',
+            );
           }
         });
   }
@@ -557,6 +558,7 @@ class StatefulSettings extends State<SettingsState> {
 
 Widget _buildArticleItem(int index) {
   final String sample = postRand[index].imageUrl.toString();
+  print("!!!!!!!!!!!!!!!! " + sample);
   int vote = 0;
 
   if (postRand[index].nsfw == true && USERSETTINGS.show_nsfw == false) {
@@ -626,7 +628,10 @@ Widget _buildArticleItem(int index) {
                   textAlign: TextAlign.left,
                 ),
                 const SizedBox(height: 12),
-                if (sample != "" && sample.isNotEmpty && sample != "default")
+                if (sample != "" &&
+                    sample.isNotEmpty &&
+                    sample != "default" &&
+                    sample != "null")
                   Image.network(
                     sample,
                     fit: BoxFit.cover,
@@ -702,15 +707,16 @@ Widget _buildSubreddit(int index, BuildContext context) {
                   const SizedBox(width: 20.0),
                   Row(
                     children: [
-                      CircleAvatar(
-                        radius: 30.0,
-                        backgroundColor:
-                            USERSETTINGS.dark_mode ? colorWhite : colorBlack,
-                        child: Image.network(
-                          mySubreddit[index].imageUrl.toString(),
-                          fit: BoxFit.cover,
+                      if (mySubreddit[index].imageUrl.toString().isNotEmpty)
+                        CircleAvatar(
+                          radius: 30.0,
+                          backgroundColor:
+                              USERSETTINGS.dark_mode ? colorWhite : colorBlack,
+                          child: Image.network(
+                            mySubreddit[index].imageUrl.toString(),
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
                       const SizedBox(width: 10.0),
                       Text(
                         //"r/Unity3D",
@@ -746,6 +752,7 @@ Widget _buildSubreddit(int index, BuildContext context) {
                 MaterialPageRoute(
                     builder: (_) => SubredditPageState(
                           subreddit: mySubreddit[index],
+                          modeSub: 0,
                         )));
           },
         ),
@@ -756,19 +763,27 @@ Widget _buildSubreddit(int index, BuildContext context) {
 
 class SubredditPageState extends StatefulWidget {
   final subReddit subreddit;
+  final int modeSub;
 
   @override
   State<SubredditPageState> createState() => StatefulSubredditPage();
-  const SubredditPageState({Key? key, required this.subreddit})
+  const SubredditPageState(
+      {Key? key, required this.subreddit, required this.modeSub})
       : super(key: key);
 }
 
-Future getSebredditInfo(subReddit subreddit) async {
-  return await subreddit.getNew();
+Future getSebredditInfo(subReddit subreddit, int modeSub) async {
+  if (modeSub == 0) {
+    return await subreddit.getNew();
+  } else if (modeSub == 1) {
+    return await subreddit.getHot();
+  }
+  return await subreddit.getTop();
 }
 
-Future<dynamic> callAsyncFetchSubreddit(subReddit subreddit) =>
-    Future.delayed(Duration(seconds: 0), () => getSebredditInfo(subreddit));
+Future<dynamic> callAsyncFetchSubreddit(subReddit subreddit, int modeSub) =>
+    Future.delayed(
+        Duration(seconds: 0), () => getSebredditInfo(subreddit, modeSub));
 
 class StatefulSubredditPage extends State<SubredditPageState> {
   static double coverHeight = 180;
@@ -780,12 +795,23 @@ class StatefulSubredditPage extends State<SubredditPageState> {
     Navigator.pop(context);
   }
 
+  goReset(BuildContext context, subReddit subreddit, int modeSub) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => SubredditPageState(
+                  subreddit: subreddit,
+                  modeSub: modeSub,
+                )));
+  }
+
   @override
   Widget build(context) {
     subReddit subreddit = widget.subreddit;
+    int modeSub = widget.modeSub;
 
     return FutureBuilder<dynamic>(
-        future: callAsyncFetchSubreddit(subreddit),
+        future: callAsyncFetchSubreddit(subreddit, modeSub),
         builder: (context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
@@ -810,58 +836,101 @@ class StatefulSubredditPage extends State<SubredditPageState> {
               ),
               body: ListView.separated(
                 padding: const EdgeInsets.all(16.0),
-                itemCount: subreddit.posts.length + 1,
+                itemCount: subreddit.posts.length + 2,
                 itemBuilder: (context, index) {
                   if (index == 0) {
                     return Stack(
                       clipBehavior: Clip.none,
                       alignment: Alignment.center,
                       children: [
-                        // Background image
-                        Container(
-                          color: colorGrey,
-                          margin: EdgeInsets.only(bottom: bottom),
-                          child: Image.network(
-                            subreddit.bannerUrl,
-                            width: double.infinity,
-                            height: coverHeight,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        // Icone image
-                        Positioned(
-                          top: top,
-                          child: CircleAvatar(
-                            radius: profileHeight / 2,
-                            backgroundColor: Colors.transparent,
-                            backgroundImage: NetworkImage(subreddit.imageUrl),
-                          ),
-                        ), /*
-                        const SizedBox(height: 8),
-                        Column(
-                          children: [
-                            Text(
-                              subreddit.name,
-                              style: TextStyle(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                  color: USERSETTINGS.dark_mode
-                                      ? colorWhite
-                                      : colorBlack),
+                        if (subreddit.imageUrl != "" &&
+                            subreddit.imageUrl.isNotEmpty &&
+                            subreddit.imageUrl != "default" &&
+                            subreddit.imageUrl != "null")
+                          Container(
+                            color: colorGrey,
+                            margin: EdgeInsets.only(bottom: bottom),
+                            child: Image.network(
+                              subreddit.bannerUrl,
+                              width: double.infinity,
+                              height: coverHeight,
+                              fit: BoxFit.cover,
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              subreddit.description,
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: USERSETTINGS.dark_mode
-                                      ? colorWhite
-                                      : colorBlack),
+                          ),
+                        if (subreddit.imageUrl != "" &&
+                            subreddit.imageUrl.isNotEmpty &&
+                            subreddit.imageUrl != "default" &&
+                            subreddit.imageUrl != "null")
+                          Positioned(
+                            top: top,
+                            child: CircleAvatar(
+                              radius: profileHeight / 2,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: NetworkImage(subreddit.imageUrl),
                             ),
-                          ],
-                        ),*/
+                          ),
                       ],
                     );
+                  } else if (index == 1) {
+                    return Card(
+                        borderOnForeground: true,
+                        color:
+                            USERSETTINGS.dark_mode ? colorGreyHard : colorWhite,
+                        child: Column(children: [
+                          Text(
+                            subreddit.nbSub.toString() + " membres",
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: USERSETTINGS.dark_mode
+                                    ? colorWhite
+                                    : colorBlack),
+                          ),
+                          Text(
+                            subreddit.description,
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: USERSETTINGS.dark_mode
+                                    ? colorWhite
+                                    : colorBlack),
+                          ),
+                          Row(
+                            children: [
+                              TextButton(
+                                  onPressed: () =>
+                                      goReset(context, subreddit, 0),
+                                  child: Text(
+                                    "New",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: USERSETTINGS.dark_mode
+                                            ? colorWhite
+                                            : colorBlack),
+                                  )),
+                              TextButton(
+                                  onPressed: () =>
+                                      goReset(context, subreddit, 1),
+                                  child: Text(
+                                    "Hot",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: USERSETTINGS.dark_mode
+                                            ? colorWhite
+                                            : colorBlack),
+                                  )),
+                              TextButton(
+                                  onPressed: () =>
+                                      goReset(context, subreddit, 2),
+                                  child: Text(
+                                    "Top",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: USERSETTINGS.dark_mode
+                                            ? colorWhite
+                                            : colorBlack),
+                                  ))
+                            ],
+                          )
+                        ]));
                   }
                   return _buildArticleSubreddit(index, subreddit);
                 },
@@ -870,7 +939,9 @@ class StatefulSubredditPage extends State<SubredditPageState> {
               ),
             );
           } else {
-            return const CircularProgressIndicator();
+            return const CircularProgressIndicator(
+              semanticsLabel: 'Linear progress indicator',
+            );
           }
         });
   }
@@ -947,7 +1018,10 @@ Widget _buildArticleSubreddit(int index, subReddit subreddit) {
                   textAlign: TextAlign.left,
                 ),
                 const SizedBox(height: 12),
-                if (sample != "" && sample.isNotEmpty && sample != "default")
+                if (sample != "" &&
+                    sample.isNotEmpty &&
+                    sample != "default" &&
+                    sample != "null")
                   Image.network(
                     sample,
                     fit: BoxFit.cover,
