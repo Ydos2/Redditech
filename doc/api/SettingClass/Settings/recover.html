@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the recover method from the Settings class, for the Dart programming language.">
+  <title>recover method - Settings class - SettingClass library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">redditech</a></li>
+    <li><a href="../../SettingClass/SettingClass-library.html">SettingClass</a></li>
+    <li><a href="../../SettingClass/Settings-class.html">Settings</a></li>
+    <li class="self-crumb">recover method</li>
+  </ol>
+  <div class="self-name">recover</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-method">recover</span> method 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype"><a href="https://api.dart.dev/stable/2.14.4/dart-async/Future-class.html">Future</a></span>
+<span class="name ">recover</span>(<wbr>)
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>@brief recover the setting of the current logged-in user</p>
+<ul>
+<li>this function shall be awaited</li>
+</ul>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Future recover() async {
+  Settings set = new Settings();
+
+  final rsp = await http.get(
+    Uri.parse(&quot;https:&#47;&#47;oauth.reddit.com&#47;api&#47;v1&#47;me&#47;prefs&quot;),
+    headers: {
+      &quot;Authorization&quot;: &quot;bearer &quot; + getAuthToken(),
+    },
+  );
+  if (rsp.statusCode == 200) {
+    final jsonrsp = jsonDecode(rsp.body);
+    this.hide_up = jsonrsp[&quot;hide_ups&quot;];
+    this.hide_down = jsonrsp[&quot;hide_downs&quot;];
+    this.email_on_pm = jsonrsp[&quot;email_private_message&quot;];
+    this.is_adult = jsonrsp[&quot;over_18&quot;];
+    this.show_nsfw = jsonrsp[&quot;label_nsfw&quot;];
+    this.dark_mode = jsonrsp[&quot;nightmode&quot;];
+  } else {
+    print(&quot;Failed data search because i got: &quot;);
+    print(rsp.statusCode);
+    print(rsp.body);
+  }
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../../index.html">redditech</a></li>
+  <li><a href="../../SettingClass/SettingClass-library.html">SettingClass</a></li>
+  <li><a href="../../SettingClass/Settings-class.html">Settings</a></li>
+  <li class="self-crumb">recover method</li>
+</ol>
+
+
+    <h5>Settings class</h5>
+    <ol>
+
+    <li class="section-title"><a href="../../SettingClass/Settings-class.html#constructors">Constructors</a></li>
+    <li><a href="../../SettingClass/Settings/Settings.html">Settings</a></li>
+
+
+    <li class="section-title">
+      <a href="../../SettingClass/Settings-class.html#instance-properties">Properties</a>
+    </li>
+    <li><a href="../../SettingClass/Settings/dark_mode.html">dark_mode</a></li>
+    <li><a href="../../SettingClass/Settings/email_on_pm.html">email_on_pm</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.14.4/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li><a href="../../SettingClass/Settings/hide_down.html">hide_down</a></li>
+    <li><a href="../../SettingClass/Settings/hide_up.html">hide_up</a></li>
+    <li><a href="../../SettingClass/Settings/is_adult.html">is_adult</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.14.4/dart-core/Object/runtimeType.html">runtimeType</a></li>
+    <li><a href="../../SettingClass/Settings/show_nsfw.html">show_nsfw</a></li>
+
+    <li class="section-title"><a href="../../SettingClass/Settings-class.html#instance-methods">Methods</a></li>
+    <li><a href="../../SettingClass/Settings/apply.html">apply</a></li>
+    <li><a href="../../SettingClass/Settings/copy.html">copy</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.14.4/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li><a href="../../SettingClass/Settings/recover.html">recover</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.14.4/dart-core/Object/toString.html">toString</a></li>
+
+    <li class="section-title inherited"><a href="../../SettingClass/Settings-class.html#operators">Operators</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.14.4/dart-core/Object/operator_equals.html">operator ==</a></li>
+
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    redditech
+      1.0.0+1
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/script.js?v1"></script>
+
+
+
+</body>
+
+</html>
+
