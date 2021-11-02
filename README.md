@@ -1,16 +1,19 @@
-# redditech
+# Redditech
+<br/>
 
-A new Flutter project.
+A project that uses reddit's API to make a mobile app that looks like reddit but with our design ! 
+<br/>
+We use flutter and dart to make this application, if you wish to maintai it you have no other choices than these technologies <br/>
 
-## Getting Started
+<br/>
 
-This project is a starting point for a Flutter application.
+### Documentation
+<br/>
 
-A few resources to get you started if this is your first Flutter project:
+If you want to maintain the code, there is a simple documentation made with dartdoc, its located in ./lib/doc/index.html <br/>
+You can regen the documentation with `dartdoc` command, if you dont have it use `pub global activate dartdoc` at the root of the repository <br/>
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+### Authentification
+<br/>
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+As we use reddit API we have to comply with the famous OAuth2. The bot currently uses this and the reddit APP wont be removed, so you can still use the same password, username and key.
