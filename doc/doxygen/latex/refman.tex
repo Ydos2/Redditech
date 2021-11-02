@@ -116,22 +116,6 @@
   \newunicodechar{²}{${}^{2}$}% Superscript two
   \newunicodechar{³}{${}^{3}$}% Superscript three
   % Hyperlinks
-    % Hyperlinks (required, but should be loaded last)
-    \ifpdf
-      \usepackage[pdftex,pagebackref=true]{hyperref}
-    \else
-      \ifxetex
-        \usepackage[pagebackref=true]{hyperref}
-      \else
-        \usepackage[ps2pdf,pagebackref=true]{hyperref}
-      \fi
-    \fi
-    \hypersetup{%
-      colorlinks=true,%
-      linkcolor=blue,%
-      citecolor=blue,%
-      unicode%
-    }
   % Custom commands used by the header
   % Custom commands
   \newcommand{\clearemptydoublepage}{%
@@ -150,12 +134,6 @@
 \begin{document}
   \raggedbottom
   % Titlepage & ToC
-    % To avoid duplicate page anchors due to reuse of same numbers for
-    % the index (be it as roman numbers)
-    \hypersetup{pageanchor=false,
-                bookmarksnumbered=true,
-                pdfencoding=unicode
-               }
   \pagenumbering{alph}
   \begin{titlepage}
   \vspace*{7cm}
@@ -170,13 +148,7 @@
   \tableofcontents
   \clearemptydoublepage
   \pagenumbering{arabic}
-  % re-enable anchors again
-  \hypersetup{pageanchor=true}
 %--- Begin generated contents ---
-\chapter{redditech}
-\label{md__r_e_a_d_m_e}
-\Hypertarget{md__r_e_a_d_m_e}
-\input{md__r_e_a_d_m_e}
 %--- End generated contents ---
 % Index
   \backmatter
