@@ -28,7 +28,7 @@ Future getHomePage() async {
 }
 
 Future<dynamic> callAsyncFetch() =>
-    Future.delayed(Duration(seconds: 1), () => getHomePage());
+    Future.delayed(Duration(seconds: 0), () => getHomePage());
 
 /// This is the main application widget.
 class MyApp extends StatelessWidget {
@@ -74,17 +74,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     const SubredditState(),
 
 // --------------------------------------
-    Column(
-      children: const <Widget>[
-        Text(
-          "Index 2: Challenges",
-          style: optionStyle,
-        ),
-        FlutterLogo(),
-      ],
-    ),
 
-// --------------------------------------
 // Front
     const AccountState(),
 
@@ -116,11 +106,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           BottomNavigationBarItem(
             icon: const Icon(Icons.star),
             label: 'Subreddit',
-            backgroundColor: USERSETTINGS.dark_mode ? colorBlack : colorWhite,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.add_circle_outline),
-            label: 'Post',
             backgroundColor: USERSETTINGS.dark_mode ? colorBlack : colorWhite,
           ),
           BottomNavigationBarItem(
@@ -761,7 +746,6 @@ Widget _buildSubreddit(int index, BuildContext context) {
                 MaterialPageRoute(
                     builder: (_) => SubredditPageState(
                           subreddit: mySubreddit[index],
-                          //
                         )));
           },
         ),
@@ -779,42 +763,116 @@ class SubredditPageState extends StatefulWidget {
       : super(key: key);
 }
 
+Future getSebredditInfo(subReddit subreddit) async {
+  return await subreddit.getNew();
+}
+
+Future<dynamic> callAsyncFetchSubreddit(subReddit subreddit) =>
+    Future.delayed(Duration(seconds: 0), () => getSebredditInfo(subreddit));
+
 class StatefulSubredditPage extends State<SubredditPageState> {
+  static double coverHeight = 180;
+  static double profileHeight = 144;
+  static double top = coverHeight - profileHeight / 2;
+  static double bottom = profileHeight / 2;
+
   goBack(BuildContext context) {
     Navigator.pop(context);
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     subReddit subreddit = widget.subreddit;
 
-    return Scaffold(
-      backgroundColor: USERSETTINGS.dark_mode ? colorBlack : colorWhite,
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
-          onPressed: () {
-            goBack(context);
-          },
-        ),
-        toolbarHeight: 50,
-        backgroundColor: USERSETTINGS.dark_mode ? colorBlack : colorWhite,
-        title: Text("r/" + subreddit.name,
-            style: TextStyle(
-                color: USERSETTINGS.dark_mode ? colorWhite : colorBlack)),
-        centerTitle: true,
-      ),
-      body: ListView.separated(
-        padding: const EdgeInsets.all(16.0),
-        itemCount: subreddit.posts.length,
-        itemBuilder: (context, index) {
-          return _buildArticleSubreddit(index, subreddit);
-        },
-        separatorBuilder: (context, index) => const SizedBox(height: 16.0),
-      ),
-    );
+    return FutureBuilder<dynamic>(
+        future: callAsyncFetchSubreddit(subreddit),
+        builder: (context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.hasData) {
+            return Scaffold(
+              backgroundColor: USERSETTINGS.dark_mode ? colorBlack : colorWhite,
+              appBar: AppBar(
+                automaticallyImplyLeading: true,
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
+                  onPressed: () {
+                    goBack(context);
+                  },
+                ),
+                toolbarHeight: 50,
+                backgroundColor:
+                    USERSETTINGS.dark_mode ? colorBlack : colorWhite,
+                title: Text("r/" + subreddit.name,
+                    style: TextStyle(
+                        color:
+                            USERSETTINGS.dark_mode ? colorWhite : colorBlack)),
+                centerTitle: true,
+              ),
+              body: ListView.separated(
+                padding: const EdgeInsets.all(16.0),
+                itemCount: subreddit.posts.length + 1,
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return Stack(
+                      clipBehavior: Clip.none,
+                      alignment: Alignment.center,
+                      children: [
+                        // Background image
+                        Container(
+                          color: colorGrey,
+                          margin: EdgeInsets.only(bottom: bottom),
+                          child: Image.network(
+                            subreddit.bannerUrl,
+                            width: double.infinity,
+                            height: coverHeight,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        // Icone image
+                        Positioned(
+                          top: top,
+                          child: CircleAvatar(
+                            radius: profileHeight / 2,
+                            backgroundColor: Colors.transparent,
+                            backgroundImage: NetworkImage(subreddit.imageUrl),
+                          ),
+                        ), /*
+                        const SizedBox(height: 8),
+                        Column(
+                          children: [
+                            Text(
+                              subreddit.name,
+                              style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                  color: USERSETTINGS.dark_mode
+                                      ? colorWhite
+                                      : colorBlack),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              subreddit.description,
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: USERSETTINGS.dark_mode
+                                      ? colorWhite
+                                      : colorBlack),
+                            ),
+                          ],
+                        ),*/
+                      ],
+                    );
+                  }
+                  return _buildArticleSubreddit(index, subreddit);
+                },
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 16.0),
+              ),
+            );
+          } else {
+            return const CircularProgressIndicator();
+          }
+        });
   }
 }
 
