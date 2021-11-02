@@ -51,18 +51,24 @@ class Post {
    * \[Param\] > (request) | int, 1 to upvote -1 to downvote 0 to remove a vote
    */
   Future upvote(int request) async {
-    if (request < -1 || request > 1)
-      return;
-    await http.post(Uri.parse("https://oauth.reddit.com/api/vote"),
-      headers: {"Authorization": "bearer " + getAuthToken(),
+    if (request < -1 || request > 1) return;
+    await http.post(
+      Uri.parse("https://oauth.reddit.com/api/vote"),
+      headers: {
+        "Authorization": "bearer " + getAuthToken(),
         "X-Modhash": "null",
       },
-      body: { "dir": request.toString(),
+      body: {
+        "dir": request.toString(),
         "id": this.id,
         "rank": "1",
       },
     );
-    this.vote = request == 1 ? true : request == -1 ? false : null;
+    this.vote = request == 1
+        ? true
+        : request == -1
+            ? false
+            : null;
   }
 }
 

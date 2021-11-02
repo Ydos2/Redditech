@@ -332,21 +332,7 @@ class StatefulAccount extends State<AccountState> {
                 const SizedBox(height: 16),
                 // Line of divide
                 const Divider(),
-                const SizedBox(
-                    height:
-                        16), /*
-            Text(
-              'About',
-              style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: colorBlack),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Web and native application developer, I am available for any work using flutter.\nI am coming from Epitech school and I am in my 3rd year.',
-              style: TextStyle(fontSize: 18, height: 1.4),
-            ),*/
+                const SizedBox(height: 16),
               ],
             ),
           ],
@@ -355,6 +341,8 @@ class StatefulAccount extends State<AccountState> {
 }
 
 class SettingsState extends StatefulWidget {
+  const SettingsState({Key? key}) : super(key: key);
+
   @override
   State<SettingsState> createState() => StatefulSettings();
 }
@@ -371,184 +359,187 @@ class StatefulSettings extends State<SettingsState> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: USERSETTINGS.dark_mode ? colorBlack : colorWhite,
-      body: Container(
-        child: DefaultTextStyle(
-          style: TextStyle(
-            color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
-          ),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(32.0),
-            child: Column(
-              children: <Widget>[
-                const SizedBox(height: 30.0),
-                SwitchListTile(
-                  title: Text(
-                    "Hide down vote",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(
-                    "" + _hideDown.toString(),
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                    ),
-                  ),
-                  value: _hideDown,
-                  onChanged: (val) {
-                    if (USERSETTINGS.hide_down == false)
-                      USERSETTINGS.hide_down = true;
-                    else
-                      USERSETTINGS.hide_down = false;
-                    USERSETTINGS.apply();
-                    setState(() {
-                      _hideDown = USERSETTINGS.hide_down;
-                    });
-                  },
+      body: DefaultTextStyle(
+        style: TextStyle(
+          color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: 30.0),
+              SwitchListTile(
+                title: Text(
+                  "Hide down vote",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
+                      fontWeight: FontWeight.bold),
                 ),
-                SwitchListTile(
-                  title: Text(
-                    "Hide up vote",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
-                        fontWeight: FontWeight.bold),
+                subtitle: Text(
+                  "" + _hideDown.toString(),
+                  style: TextStyle(
+                    color: Colors.grey.shade400,
                   ),
-                  subtitle: Text(
-                    "" + _hideUp.toString(),
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                    ),
-                  ),
-                  value: _hideUp,
-                  onChanged: (bool value) {
-                    if (USERSETTINGS.hide_up == false)
-                      USERSETTINGS.hide_up = true;
-                    else
-                      USERSETTINGS.hide_up = false;
-                    USERSETTINGS.apply();
-                    setState(() {
-                      _hideUp = USERSETTINGS.hide_up;
-                    });
-                  },
                 ),
-                SwitchListTile(
-                  title: Text(
-                    "Send email on private message",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(
-                    "" + _email.toString(),
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                    ),
-                  ),
-                  value: _email,
-                  onChanged: (val) {
-                    if (USERSETTINGS.email_on_pm == false)
-                      USERSETTINGS.email_on_pm = true;
-                    else
-                      USERSETTINGS.email_on_pm = false;
-                    USERSETTINGS.apply();
-                    setState(() {
-                      _email = USERSETTINGS.email_on_pm;
-                    });
-                  },
+                value: _hideDown,
+                onChanged: (val) {
+                  if (USERSETTINGS.hide_down == false)
+                    USERSETTINGS.hide_down = true;
+                  else
+                    USERSETTINGS.hide_down = false;
+                  USERSETTINGS.apply();
+                  setState(() {
+                    _hideDown = USERSETTINGS.hide_down;
+                  });
+                },
+              ),
+              SwitchListTile(
+                title: Text(
+                  "Hide up vote",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
+                      fontWeight: FontWeight.bold),
                 ),
-                SwitchListTile(
-                  title: Text(
-                    "Over 18",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
-                        fontWeight: FontWeight.bold),
+                subtitle: Text(
+                  "" + _hideUp.toString(),
+                  style: TextStyle(
+                    color: Colors.grey.shade400,
                   ),
-                  subtitle: Text(
-                    "" + _over.toString(),
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                    ),
-                  ),
-                  value: _over,
-                  onChanged: (val) {
-                    if (USERSETTINGS.is_adult == false)
-                      USERSETTINGS.is_adult = true;
-                    else
-                      USERSETTINGS.is_adult = false;
-                    USERSETTINGS.apply();
-                    setState(() {
-                      _over = USERSETTINGS.is_adult;
-                    });
-                  },
                 ),
-                SwitchListTile(
-                  title: Text(
-                    "Show nsfw",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(
-                    "" + _nsfw.toString(),
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                    ),
-                  ),
-                  value: _nsfw,
-                  onChanged: (val) {
-                    if (USERSETTINGS.show_nsfw == false)
-                      USERSETTINGS.show_nsfw = true;
-                    else
-                      USERSETTINGS.show_nsfw = false;
-                    USERSETTINGS.apply();
-                    setState(() {
-                      _nsfw = USERSETTINGS.show_nsfw;
-                    });
-                  },
+                value: _hideUp,
+                onChanged: (bool value) {
+                  if (USERSETTINGS.hide_up == false) {
+                    USERSETTINGS.hide_up = true;
+                  } else {
+                    USERSETTINGS.hide_up = false;
+                  }
+                  USERSETTINGS.apply();
+                  setState(() {
+                    _hideUp = USERSETTINGS.hide_up;
+                  });
+                },
+              ),
+              SwitchListTile(
+                title: Text(
+                  "Send email on private message",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
+                      fontWeight: FontWeight.bold),
                 ),
-                SwitchListTile(
-                  title: Text(
-                    "Dark mode",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
-                        fontWeight: FontWeight.bold),
+                subtitle: Text(
+                  "" + _email.toString(),
+                  style: TextStyle(
+                    color: Colors.grey.shade400,
                   ),
-                  subtitle: Text(
-                    "" + _dark.toString(),
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                    ),
-                  ),
-                  value: _dark,
-                  onChanged: (val) {
-                    if (USERSETTINGS.dark_mode == false)
-                      USERSETTINGS.dark_mode = true;
-                    else
-                      USERSETTINGS.dark_mode = false;
-                    USERSETTINGS.apply();
-                    setState(() {
-                      _dark = USERSETTINGS.dark_mode;
-                    });
-                  },
                 ),
-                ListTile(
-                  title: Text(
-                    "Logout",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  onTap: () {},
+                value: _email,
+                onChanged: (val) {
+                  if (USERSETTINGS.email_on_pm == false) {
+                    USERSETTINGS.email_on_pm = true;
+                  } else {
+                    USERSETTINGS.email_on_pm = false;
+                  }
+                  USERSETTINGS.apply();
+                  setState(() {
+                    _email = USERSETTINGS.email_on_pm;
+                  });
+                },
+              ),
+              SwitchListTile(
+                title: Text(
+                  "Over 18",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
+                      fontWeight: FontWeight.bold),
                 ),
-              ],
-            ),
+                subtitle: Text(
+                  "" + _over.toString(),
+                  style: TextStyle(
+                    color: Colors.grey.shade400,
+                  ),
+                ),
+                value: _over,
+                onChanged: (val) {
+                  if (USERSETTINGS.is_adult == false) {
+                    USERSETTINGS.is_adult = true;
+                  } else {
+                    USERSETTINGS.is_adult = false;
+                  }
+                  USERSETTINGS.apply();
+                  setState(() {
+                    _over = USERSETTINGS.is_adult;
+                  });
+                },
+              ),
+              SwitchListTile(
+                title: Text(
+                  "Show nsfw",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
+                      fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(
+                  "" + _nsfw.toString(),
+                  style: TextStyle(
+                    color: Colors.grey.shade400,
+                  ),
+                ),
+                value: _nsfw,
+                onChanged: (val) {
+                  if (USERSETTINGS.show_nsfw == false) {
+                    USERSETTINGS.show_nsfw = true;
+                  } else {
+                    USERSETTINGS.show_nsfw = false;
+                  }
+                  USERSETTINGS.apply();
+                  setState(() {
+                    _nsfw = USERSETTINGS.show_nsfw;
+                  });
+                },
+              ),
+              SwitchListTile(
+                title: Text(
+                  "Dark mode",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
+                      fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(
+                  "" + _dark.toString(),
+                  style: TextStyle(
+                    color: Colors.grey.shade400,
+                  ),
+                ),
+                value: _dark,
+                onChanged: (val) {
+                  if (USERSETTINGS.dark_mode == false) {
+                    USERSETTINGS.dark_mode = true;
+                  } else {
+                    USERSETTINGS.dark_mode = false;
+                  }
+                  USERSETTINGS.apply();
+                  setState(() {
+                    _dark = USERSETTINGS.dark_mode;
+                  });
+                },
+              ),
+              ListTile(
+                title: Text(
+                  "Logout",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
+                      fontWeight: FontWeight.bold),
+                ),
+                onTap: () {},
+              ),
+            ],
           ),
         ),
       ),
@@ -558,7 +549,6 @@ class StatefulSettings extends State<SettingsState> {
 
 Widget _buildArticleItem(int index) {
   final String sample = postRand[index].imageUrl.toString();
-  print("!!!!!!!!!!!!!!!! " + sample);
   int vote = 0;
 
   if (postRand[index].nsfw == true && USERSETTINGS.show_nsfw == false) {
@@ -618,7 +608,6 @@ Widget _buildArticleItem(int index) {
                 const SizedBox(height: 8),
                 // Image
                 Text(
-                  //"Blablabla dg,jisgpzgjzpogjzpojpz\nolsfkjzpgjpqzgjipoa^qzbripoa^bvniraop^bri\ndpsoqjpqvjpzdvkjpdvjpodvdvsbfs,kl dafspo",
                   postRand[index].subtext.toString(),
                   style: TextStyle(
                     color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
@@ -640,7 +629,6 @@ Widget _buildArticleItem(int index) {
                   ),
                 const SizedBox(height: 8),
                 const Divider(),
-                // Bottom button
                 ButtonBar(
                   alignment: MainAxisAlignment.start,
                   children: <Widget>[

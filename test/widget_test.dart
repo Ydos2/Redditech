@@ -15,7 +15,6 @@ void main() {
       expect(find.text('Redditech'), findsOneWidget);
       expect(find.text('Share, Create and Play'), findsOneWidget);
       expect(find.text('LOGIN'), findsOneWidget);
-      //expect(find.text('Login'), findsNothing);
     });
 
     testWidgets('Tests widget icons', (WidgetTester tester) async {
@@ -29,13 +28,5 @@ void main() {
       expect(find.byIcon(Icons.settings), findsOneWidget);*/
       //expect(find.text('Login'), findsNothing);
     });
-
-    /*test('value should be incremented', () {
-      final counter = Counter();
-
-      counter.increment();
-
-      expect(counter.value, 1);
-    });*/
   });
 }
