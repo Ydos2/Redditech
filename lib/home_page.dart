@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:redditech/Profile.dart';
 import 'package:redditech/SettingClass.dart';
@@ -9,6 +7,7 @@ import 'package:redditech/subReddit.dart';
 Profile USERPROFILE = Profile("", "", "", 0);
 Settings USERSETTINGS = new Settings();
 List<Post> postRand = [];
+List<subReddit> mySubreddit = [];
 
 const Color colorBlack = Colors.black;
 const Color colorWhite = Colors.white;
@@ -21,6 +20,10 @@ void main() {
 
 Future getHomePage() async {
   USERSETTINGS.recover();
+  mySubreddit = await getMySubscriptions();
+  for (var i = 0; i < mySubreddit.length; i++) {
+    mySubreddit[i].getInfo();
+  }
   return postRand = await getRandomPosts(await getMySubscriptions());
 }
 
@@ -68,12 +71,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
 // --------------------------------------
 
-    Scaffold(
-        // List defilement
-        body: ListView(
-      padding: EdgeInsets.zero,
-      children: const <Widget>[],
-    )),
+    const SubredditState(),
 
 // --------------------------------------
     Column(
@@ -206,6 +204,72 @@ class StatefulHome extends State<HomeState> {
             itemCount: postRand.length,
             itemBuilder: (context, index) {
               return _buildArticleItem(index);
+            },
+            separatorBuilder: (context, index) => const SizedBox(height: 16.0),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SubredditState extends StatefulWidget {
+  const SubredditState({Key? key}) : super(key: key);
+
+  @override
+  State<SubredditState> createState() => StatefulSubreddit();
+}
+
+class StatefulSubreddit extends State<SubredditState> {
+  static double coverHeight = 180;
+  static double profileHeight = 144;
+  static double top = coverHeight - profileHeight / 2;
+  static double bottom = profileHeight / 2;
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      initialIndex: 0,
+      length: 5,
+      child: Theme(
+        data: ThemeData(
+          primaryColor: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
+          appBarTheme: AppBarTheme(
+            color: USERSETTINGS.dark_mode ? colorBlack : colorWhite,
+            textTheme: const TextTheme(
+              headline1: TextStyle(
+                color: colorGrey,
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            iconTheme: const IconThemeData(color: colorGrey),
+            actionsIconTheme: const IconThemeData(
+              color: colorGrey,
+            ),
+          ),
+        ),
+        child: Scaffold(
+          backgroundColor: USERSETTINGS.dark_mode ? colorBlack : colorWhite,
+          // Bar Up
+          appBar: AppBar(
+            centerTitle: true,
+            title: Text('Home',
+                style: TextStyle(
+                    color: USERSETTINGS.dark_mode ? colorWhite : colorBlack)),
+            leading: const Icon(Icons.category),
+            actions: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: () {},
+              )
+            ],
+          ),
+          body: ListView.separated(
+            padding: const EdgeInsets.all(16.0),
+            itemCount: mySubreddit.length,
+            itemBuilder: (context, index) {
+              return _buildSubreddit(index, context);
             },
             separatorBuilder: (context, index) => const SizedBox(height: 16.0),
           ),
@@ -509,9 +573,7 @@ class StatefulSettings extends State<SettingsState> {
 Widget _buildArticleItem(int index) {
   final String sample = postRand[index].imageUrl.toString();
   int vote = 0;
-  print(postRand[index].imageUrl.toString());
-  print(sample);
-  print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
   if (postRand[index].nsfw == true && USERSETTINGS.show_nsfw == false) {
     return Container();
   }
@@ -538,7 +600,7 @@ Widget _buildArticleItem(int index) {
                           children: [
                             Text(
                               //"r/Unity3D",
-                              postRand[index].subReddit,
+                              "r/" + postRand[index].subReddit,
                               style: TextStyle(
                                 color: USERSETTINGS.dark_mode
                                     ? colorWhite
@@ -615,6 +677,254 @@ Widget _buildArticleItem(int index) {
                             const Icon(Icons.arrow_downward, color: colorGrey),
                         onPressed: () {
                           postRand[index].upvote(-1);
+                          vote = -1;
+                        },
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildSubreddit(int index, BuildContext context) {
+  String nbrSub = "";
+
+  if (mySubreddit[index].nbSub > 1000000) {
+    nbrSub = (mySubreddit[index].nbSub / 1000000).round().toString() + 'M';
+  } else if (mySubreddit[index].nbSub > 1000) {
+    nbrSub = (mySubreddit[index].nbSub / 1000).round().toString() + 'K';
+  }
+
+  return Container(
+    color: USERSETTINGS.dark_mode ? colorGreyHard : colorWhite,
+    child: Stack(
+      children: <Widget>[
+        TextButton(
+          child: Card(
+            borderOnForeground: true,
+            color: USERSETTINGS.dark_mode ? colorGreyHard : colorWhite,
+            child: Container(
+              color: USERSETTINGS.dark_mode ? colorGreyHard : colorWhite,
+              padding: const EdgeInsets.all(10.0),
+              margin: const EdgeInsets.all(10.0),
+              child: Column(
+                children: <Widget>[
+                  const SizedBox(width: 20.0),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 30.0,
+                        backgroundColor:
+                            USERSETTINGS.dark_mode ? colorWhite : colorBlack,
+                        child: Image.network(
+                          mySubreddit[index].imageUrl.toString(),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const SizedBox(width: 10.0),
+                      Text(
+                        //"r/Unity3D",
+                        "r/" + mySubreddit[index].name,
+                        style: TextStyle(
+                          color:
+                              USERSETTINGS.dark_mode ? colorWhite : colorBlack,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                      const SizedBox(width: 10.0),
+                      Text(
+                        //"Publiée par u/Ydos * 10 mois",
+                        nbrSub,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => SubredditPageState(
+                          subreddit: mySubreddit[index],
+                          //
+                        )));
+          },
+        ),
+      ],
+    ),
+  );
+}
+
+class SubredditPageState extends StatefulWidget {
+  final subReddit subreddit;
+
+  @override
+  State<SubredditPageState> createState() => StatefulSubredditPage();
+  const SubredditPageState({Key? key, required this.subreddit})
+      : super(key: key);
+}
+
+class StatefulSubredditPage extends State<SubredditPageState> {
+  goBack(BuildContext context) {
+    Navigator.pop(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    subReddit subreddit = widget.subreddit;
+
+    return Scaffold(
+      backgroundColor: USERSETTINGS.dark_mode ? colorBlack : colorWhite,
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
+          onPressed: () {
+            goBack(context);
+          },
+        ),
+        toolbarHeight: 50,
+        backgroundColor: USERSETTINGS.dark_mode ? colorBlack : colorWhite,
+        title: Text("r/" + subreddit.name,
+            style: TextStyle(
+                color: USERSETTINGS.dark_mode ? colorWhite : colorBlack)),
+        centerTitle: true,
+      ),
+      body: ListView.separated(
+        padding: const EdgeInsets.all(16.0),
+        itemCount: subreddit.posts.length,
+        itemBuilder: (context, index) {
+          return _buildArticleSubreddit(index, subreddit);
+        },
+        separatorBuilder: (context, index) => const SizedBox(height: 16.0),
+      ),
+    );
+  }
+}
+
+Widget _buildArticleSubreddit(int index, subReddit subreddit) {
+  final String sample = subreddit.posts[index].imageUrl.toString();
+  int vote = 0;
+
+  if (subreddit.posts[index].nsfw == true && USERSETTINGS.show_nsfw == false) {
+    return Container();
+  }
+  return Container(
+    color: USERSETTINGS.dark_mode ? colorGreyHard : colorWhite,
+    child: Stack(
+      children: <Widget>[
+        Card(
+          borderOnForeground: true,
+          color: USERSETTINGS.dark_mode ? colorGreyHard : colorWhite,
+          child: Container(
+            color: USERSETTINGS.dark_mode ? colorGreyHard : colorWhite,
+            padding: const EdgeInsets.all(10.0),
+            margin: const EdgeInsets.all(10.0),
+            child: Column(
+              children: <Widget>[
+                const SizedBox(width: 20.0),
+                Column(
+                  children: <Widget>[
+                    Row(
+                      children: [
+                        const SizedBox(width: 8),
+                        Column(
+                          children: [
+                            Text(
+                              //"r/Unity3D",
+                              "r/" + subreddit.posts[index].subReddit,
+                              style: TextStyle(
+                                color: USERSETTINGS.dark_mode
+                                    ? colorWhite
+                                    : colorBlack,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                              ),
+                              textAlign: TextAlign.left,
+                            ),
+                            Text(
+                              //"Publiée par u/Ydos * 10 mois",
+                              subreddit.posts[index].author,
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                              ),
+                              textAlign: TextAlign.left,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                const Divider(),
+                const SizedBox(height: 8),
+                // Image
+                Text(
+                  //"Blablabla dg,jisgpzgjzpogjzpojpz\nolsfkjzpgjpqzgjipoa^qzbripoa^bvniraop^bri\ndpsoqjpqvjpzdvkjpdvjpodvdvsbfs,kl dafspo",
+                  subreddit.posts[index].subtext.toString(),
+                  style: TextStyle(
+                    color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 16.0,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+                const SizedBox(height: 12),
+                if (sample != "" && sample.isNotEmpty && sample != "default")
+                  Image.network(
+                    sample,
+                    fit: BoxFit.cover,
+                    width: 300,
+                    height: 300,
+                  ),
+                const SizedBox(height: 8),
+                const Divider(),
+                // Bottom button
+                ButtonBar(
+                  alignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    TextButton(
+                      child: const Icon(Icons.arrow_upward, color: colorGrey),
+                      onPressed: () {
+                        subreddit.posts[index].upvote(1);
+                        vote = 1;
+                      },
+                    ),
+                    Text(
+                      //USERSETTINGS.hide_up ? 'Vote' : '42',
+                      USERSETTINGS.hide_up
+                          ? 'Vote'
+                          : (subreddit.posts[index].upvotes + vote).toString(),
+                      style: const TextStyle(
+                          fontSize: 18,
+                          color: colorGrey,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    if (USERSETTINGS.hide_down == false)
+                      TextButton(
+                        child:
+                            const Icon(Icons.arrow_downward, color: colorGrey),
+                        onPressed: () {
+                          subreddit.posts[index].upvote(-1);
                           vote = -1;
                         },
                       ),
