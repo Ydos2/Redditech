@@ -4,7 +4,8 @@ import 'dart:io';
 import 'auth.dart';
 import 'dart:math';
 
-/** @brief This class is used to initialize the subReddit class
+/** \[Brief\] > This class is used to initialize the subReddit class
+ *
  *
  */
 class Post {
@@ -19,17 +20,18 @@ class Post {
   int upvotes = 0;
   bool? vote = null;
 
-  /** @brief Post constructor
-   * @param title String containing the title of the post
-   * @param subtext String that can be null, containing the subtext
-   * @param image String that can be null, contain the URL a possible image in the post
-   * @param sub String that contains the subreddit it has been posted on
-   * @param poster String that contains the name of ther user that posted this
-   * @param upvotes int, it is the numburs of upvotes (or downvotes) on the post
-   * @param nsfw bool, true if the content is for adult
-   * @param subRedditImg String, the subReddit img from where the post have been made
-   * @param id String, it is the id of the post, used for the upvote
-   * @param vote Boolean, null if nothing, true if liked, false if dislikes
+  /** \[Brief\] > Post constructor
+   *
+   * \[Param\] > (title) | String containing the title of the post
+   * \[Param\] > (subtext) | String that can be null, containing the subtext
+   * \[Param\] > (image) | String that can be null, contain the URL a possible image in the post
+   * \[Param\] > (sub) | String that contains the subreddit it has been posted on
+   * \[Param\] > (poster) | String that contains the name of ther user that posted this
+   * \[Param\] > (upvotes) | int, it is the numburs of upvotes (or downvotes) on the post
+   * \[Param\] > (nsfw) | bool, true if the content is for adult
+   * \[Param\] > (subRedditImg) | String, the subReddit img from where the post have been made
+   * \[Param\] > (id) | String, it is the id of the post, used for the upvote
+   * \[Param\] > (vote) | Boolean, null if nothing, true if liked, false if dislikes
   */
   Post(String title, String? subtext, String? image, String sub, String poster,
       int upvotes, bool nsfw, String subRedImg, String id, bool? vote) {
@@ -45,6 +47,9 @@ class Post {
     this.vote = vote;
   }
 
+  /** @biref used to upvote, downvote or cancel a post
+   * \[Param\] > (request) | int, 1 to upvote -1 to downvote 0 to remove a vote
+   */
   Future upvote(int request) async {
     if (request < -1 || request > 1)
       return;
@@ -61,7 +66,8 @@ class Post {
   }
 }
 
-/** @brief subReddit class
+/** \[Brief\] > subReddit class
+ *
  * This class is used to get the subreddits so you can see the posts from other people
  * all around the world !
  */
@@ -74,8 +80,9 @@ class subReddit {
   int nbSub = 0;
   List<Post> posts = List.empty(growable: true);
 
-  /** @brief subReddit constructor
-   * @param name String, contains the name of the subReddit you want to pull informations from
+  /** \[Brief\] > subReddit constructor
+   *
+   * \[Param\] > (name) | String, contains the name of the subReddit you want to pull informations from
    */
   subReddit(String name) {
     this.name = name;
@@ -97,9 +104,11 @@ class subReddit {
     }
   }
 
-  /** @brief get the informations of the subReddit
+  /** \[Brief\] > get the informations of the subReddit
+   *
    * this function shall be awaited.
-   * @return true of it succeed, false if the fetch failed (rare)
+   *
+   * \[Return\] > true of it succeed, false if the fetch failed (rare)
    */
   Future<bool> getInfo() async {
     var rsp = await http.get(
@@ -125,7 +134,8 @@ class subReddit {
     }
   }
 
-  /** @brief Make the user unsubcribe to this subReddit
+  /** \[Brief\] > Make the user unsubcribe to this subReddit
+   *
    * this function shall be awaited.
    */
   Future unsubscribe() async {
@@ -140,7 +150,8 @@ class subReddit {
     );
   }
 
-  /** @brief Make the user subcribe to this subReddit
+  /** \[Brief\] > Make the user subcribe to this subReddit
+   *
    * this function shall be awaited.
    */
   Future subscribe() async {
@@ -155,10 +166,12 @@ class subReddit {
     );
   }
 
-  /** @brief get the top post from this subReddit
+  /** \[Brief\] > get the top post from this subReddit
+   *
    * automatically fills the "posts" List in the current object
    * this function shall be awaited.
-   * @return true if it succeed, false it failed
+   *
+   * \[Return\] > true if it succeed, false it failed
    */
   Future<bool> getTop() async {
     final rsp = await http.get(
@@ -179,10 +192,12 @@ class subReddit {
     }
   }
 
-  /** @brief get the new post from this subReddit
+  /** \[Brief\] > get the new post from this subReddit
+   *
    * automatically fills the "posts" List in the current object
    * this function shall be awaited.
-   * @return true if it succeed, false it failed
+   *
+   * \[Return\] > true if it succeed, false it failed
    */
   Future<bool> getNew() async {
     final rsp = await http.get(
@@ -203,10 +218,12 @@ class subReddit {
     }
   }
 
-  /** @brief get the hot post from this subReddit
+  /** \[Brief\] > get the hot post from this subReddit
+   *
    * automatically fills the "posts" List in the current object
    * this function shall be awaited.
-   * @return true if it succeed, false it failed
+   *
+   * \[Return\] > true if it succeed, false it failed
    */
   Future<bool> getHot() async {
     final rsp = await http.get(
@@ -228,11 +245,13 @@ class subReddit {
   }
 }
 
-/** @brief get random posts from the list of the subreddits provided
- * @param subs A list of subReddits that the posts should be fetched from
+/** \[Brief\] > get random posts from the list of the subreddits provided
+ *
+ * \[Param\] > (subs) | A list of subReddits that the posts should be fetched from
  * this function is usually called with getMySubscription() as parameter
  * this function shall be awaited.
- * @return a list of new posts randomly picked in the list of subReddit
+ *
+ * \[Return\] > a list of new posts randomly picked in the list of subReddit
  */
 Future<List<Post>> getRandomPosts(List<subReddit> subs) async {
   List<Post> posts = List.empty(growable: true);
@@ -253,9 +272,11 @@ Future<List<Post>> getRandomPosts(List<subReddit> subs) async {
   return posts;
 }
 
-/** @brief get the subreddit that the logged-in user is subscribed to
+/** \[Brief\] > get the subreddit that the logged-in user is subscribed to
+ *
  * this function shall be awaited.
- * @return a list of new posts randomly picked in the list of subReddit
+ *
+ * \[Return\] > a list of new posts randomly picked in the list of subReddit
  */
 Future<List<subReddit>> getMySubscriptions() async {
   final rsp = await http.get(
