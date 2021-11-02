@@ -159,36 +159,144 @@ prints green, as expected.</p>
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
-Widget build(BuildContext context) {
+Widget build(context) {
   subReddit subreddit = widget.subreddit;
+  int modeSub = widget.modeSub;
 
-  return Scaffold(
-    backgroundColor: USERSETTINGS.dark_mode ? colorBlack : colorWhite,
-    appBar: AppBar(
-      automaticallyImplyLeading: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
-        onPressed: () {
-          goBack(context);
-        },
-      ),
-      toolbarHeight: 50,
-      backgroundColor: USERSETTINGS.dark_mode ? colorBlack : colorWhite,
-      title: Text(&quot;r&#47;&quot; + subreddit.name,
-          style: TextStyle(
-              color: USERSETTINGS.dark_mode ? colorWhite : colorBlack)),
-      centerTitle: true,
-    ),
-    body: ListView.separated(
-      padding: const EdgeInsets.all(16.0),
-      itemCount: subreddit.posts.length,
-      itemBuilder: (context, index) {
-        return _buildArticleSubreddit(index, subreddit);
-      },
-      separatorBuilder: (context, index) =&gt; const SizedBox(height: 16.0),
-    ),
-  );
+  return FutureBuilder&lt;dynamic&gt;(
+      future: callAsyncFetchSubreddit(subreddit, modeSub),
+      builder: (context, AsyncSnapshot&lt;dynamic&gt; snapshot) {
+        if (snapshot.hasData) {
+          return Scaffold(
+            backgroundColor: USERSETTINGS.dark_mode ? colorBlack : colorWhite,
+            appBar: AppBar(
+              automaticallyImplyLeading: true,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                color: USERSETTINGS.dark_mode ? colorWhite : colorBlack,
+                onPressed: () {
+                  goBack(context);
+                },
+              ),
+              toolbarHeight: 50,
+              backgroundColor:
+                  USERSETTINGS.dark_mode ? colorBlack : colorWhite,
+              title: Text(&quot;r&#47;&quot; + subreddit.name,
+                  style: TextStyle(
+                      color:
+                          USERSETTINGS.dark_mode ? colorWhite : colorBlack)),
+              centerTitle: true,
+            ),
+            body: ListView.separated(
+              padding: const EdgeInsets.all(16.0),
+              itemCount: subreddit.posts.length + 2,
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return Stack(
+                    clipBehavior: Clip.none,
+                    alignment: Alignment.center,
+                    children: [
+                      if (subreddit.imageUrl != &quot;&quot; &amp;&amp;
+                          subreddit.imageUrl.isNotEmpty &amp;&amp;
+                          subreddit.imageUrl != &quot;default&quot; &amp;&amp;
+                          subreddit.imageUrl != &quot;null&quot;)
+                        Container(
+                          color: colorGrey,
+                          margin: EdgeInsets.only(bottom: bottom),
+                          child: Image.network(
+                            subreddit.bannerUrl,
+                            width: double.infinity,
+                            height: coverHeight,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      if (subreddit.imageUrl != &quot;&quot; &amp;&amp;
+                          subreddit.imageUrl.isNotEmpty &amp;&amp;
+                          subreddit.imageUrl != &quot;default&quot; &amp;&amp;
+                          subreddit.imageUrl != &quot;null&quot;)
+                        Positioned(
+                          top: top,
+                          child: CircleAvatar(
+                            radius: profileHeight &#47; 2,
+                            backgroundColor: Colors.transparent,
+                            backgroundImage: NetworkImage(subreddit.imageUrl),
+                          ),
+                        ),
+                    ],
+                  );
+                } else if (index == 1) {
+                  return Card(
+                      borderOnForeground: true,
+                      color:
+                          USERSETTINGS.dark_mode ? colorGreyHard : colorWhite,
+                      child: Column(children: [
+                        Text(
+                          subreddit.nbSub.toString() + &quot; membres&quot;,
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: USERSETTINGS.dark_mode
+                                  ? colorWhite
+                                  : colorBlack),
+                        ),
+                        Text(
+                          subreddit.description,
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: USERSETTINGS.dark_mode
+                                  ? colorWhite
+                                  : colorBlack),
+                        ),
+                        Row(
+                          children: [
+                            TextButton(
+                                onPressed: () =&gt;
+                                    goReset(context, subreddit, 0),
+                                child: Text(
+                                  &quot;New&quot;,
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: USERSETTINGS.dark_mode
+                                          ? colorWhite
+                                          : colorBlack),
+                                )),
+                            TextButton(
+                                onPressed: () =&gt;
+                                    goReset(context, subreddit, 1),
+                                child: Text(
+                                  &quot;Hot&quot;,
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: USERSETTINGS.dark_mode
+                                          ? colorWhite
+                                          : colorBlack),
+                                )),
+                            TextButton(
+                                onPressed: () =&gt;
+                                    goReset(context, subreddit, 2),
+                                child: Text(
+                                  &quot;Top&quot;,
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: USERSETTINGS.dark_mode
+                                          ? colorWhite
+                                          : colorBlack),
+                                ))
+                          ],
+                        )
+                      ]));
+                }
+                return _buildArticleSubreddit(index, subreddit);
+              },
+              separatorBuilder: (context, index) =&gt;
+                  const SizedBox(height: 16.0),
+            ),
+          );
+        } else {
+          return const CircularProgressIndicator(
+            semanticsLabel: &#39;Linear progress indicator&#39;,
+          );
+        }
+      });
 }</code></pre>
 </section>
 
@@ -235,6 +343,7 @@ Widget build(BuildContext context) {
     <li class="inherited"><a href="../../home_page/StatefulSubredditPage/didUpdateWidget.html">didUpdateWidget</a></li>
     <li class="inherited"><a href="../../home_page/StatefulSubredditPage/dispose.html">dispose</a></li>
     <li><a href="../../home_page/StatefulSubredditPage/goBack.html">goBack</a></li>
+    <li><a href="../../home_page/StatefulSubredditPage/goReset.html">goReset</a></li>
     <li class="inherited"><a href="../../home_page/StatefulSubredditPage/initState.html">initState</a></li>
     <li class="inherited"><a href="https://api.dart.dev/stable/2.14.4/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
     <li class="inherited"><a href="../../home_page/StatefulSubredditPage/reassemble.html">reassemble</a></li>
@@ -247,6 +356,11 @@ Widget build(BuildContext context) {
     <li class="inherited"><a href="https://api.dart.dev/stable/2.14.4/dart-core/Object/operator_equals.html">operator ==</a></li>
 
 
+    <li class="section-title"><a href="../../home_page/StatefulSubredditPage-class.html#static-properties">Static properties</a></li>
+    <li><a href="../../home_page/StatefulSubredditPage/bottom.html">bottom</a></li>
+    <li><a href="../../home_page/StatefulSubredditPage/coverHeight.html">coverHeight</a></li>
+    <li><a href="../../home_page/StatefulSubredditPage/profileHeight.html">profileHeight</a></li>
+    <li><a href="../../home_page/StatefulSubredditPage/top.html">top</a></li>
 
 
 </ol>

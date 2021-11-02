@@ -255,9 +255,10 @@ class subReddit {
 
 /** \[Brief\] > get random posts from the list of the subreddits provided
 
- * \[Param\] > (subs) | A list of subReddits that the posts should be fetched from
- this function is usually called with getMySubscription() as parameter
- this function shall be awaited.
+ * \[Param\] > (subs) | A list of subReddits that the posts should be fetched from.
+
+ - this function is usually called with getMySubscription() as parameter
+ - this function shall be awaited.
 
  * \[Return\] > a list of new posts randomly picked in the list of subReddit
  */

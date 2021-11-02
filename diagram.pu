@@ -1,0 +1,68 @@
+@startuml redditech
+    rectangle FrontEnd {
+    }
+
+    rectangle redditApi {
+    }
+
+    class Profile {
+        +String username
+        +String imageUrl
+        +String? bannerUrl
+        +Int karma
+
+        +Profile(String, String, Stirng?, int)
+        +Future getUserProfile(String user) async
+        +Future<Profile> getMyProfile()
+    }
+    class SubReddit {
+        +String name
+        +Stirng description
+        +String imageUrl
+        +String bannerUrl
+        +int nbSub
+        +List<Post> posts
+
+        +subReddit(String name)
+        +Future unsubscribe() async
+        +Future subscribe() async
+        +Future<bool> getInfo() async
+        +Future<bool> getTop() async
+        +Future<bool> getNew() async
+        +Future<bool> getHot() async
+        -void _extractPosts(Map<String, dynamic> json)
+       
+        +extern Future<List<subReddit>> getMySubscriptions() async
+    }
+    class Post {
+        +String title
+        +String? subtext
+        +String? imageUrl
+        +String subReddit
+        +String author
+        +String subRedImg
+        +String id
+        +bool nsfw
+        +int upvotes
+        +bool? vote
+
+        +Post(...)
+        +Future upvote(int) async
+        
+        +extern Future<List<Post>> getRandomPosts(List<subReddit> subs) async 
+    }
+    Profile o-- redditApi
+    Post o--o redditApi
+    SubReddit o-- redditApi
+
+    Profile --> FrontEnd
+    SubReddit --> FrontEnd
+    Post --> FrontEnd
+
+    Post *-- SubReddit
+
+    allowmixing
+
+    actor user
+    user "Sends interactions" <..>  FrontEnd : < Shows app
+@enduml

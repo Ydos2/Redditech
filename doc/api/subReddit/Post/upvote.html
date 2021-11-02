@@ -72,18 +72,24 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future upvote(int request) async {
-  if (request &lt; -1 || request &gt; 1)
-    return;
-  await http.post(Uri.parse(&quot;https:&#47;&#47;oauth.reddit.com&#47;api&#47;vote&quot;),
-    headers: {&quot;Authorization&quot;: &quot;bearer &quot; + getAuthToken(),
+  if (request &lt; -1 || request &gt; 1) return;
+  await http.post(
+    Uri.parse(&quot;https:&#47;&#47;oauth.reddit.com&#47;api&#47;vote&quot;),
+    headers: {
+      &quot;Authorization&quot;: &quot;bearer &quot; + getAuthToken(),
       &quot;X-Modhash&quot;: &quot;null&quot;,
     },
-    body: { &quot;dir&quot;: request.toString(),
+    body: {
+      &quot;dir&quot;: request.toString(),
       &quot;id&quot;: this.id,
       &quot;rank&quot;: &quot;1&quot;,
     },
   );
-  this.vote = request == 1 ? true : request == -1 ? false : null;
+  this.vote = request == 1
+      ? true
+      : request == -1
+          ? false
+          : null;
 }</code></pre>
 </section>
 

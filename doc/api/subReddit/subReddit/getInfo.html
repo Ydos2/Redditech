@@ -83,7 +83,8 @@
   if (rsp.statusCode == 200) {
     final jsonrsp = jsonDecode(rsp.body);
     this.imageUrl = jsonrsp[&quot;data&quot;][&quot;community_icon&quot;];
-    this.imageUrl = imageUrl.substring(0, imageUrl.indexOf(&quot;?&quot;));
+    if (!imageUrl.isEmpty)
+      this.imageUrl = imageUrl.substring(0, imageUrl.indexOf(&quot;?&quot;));
     this.description = jsonrsp[&quot;data&quot;][&quot;public_description&quot;];
     this.bannerUrl = jsonrsp[&quot;data&quot;][&quot;banner_background_image&quot;];
     this.bannerUrl = bannerUrl.substring(0, bannerUrl.indexOf(&quot;?&quot;));

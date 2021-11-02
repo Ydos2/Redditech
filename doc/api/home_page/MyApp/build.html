@@ -116,7 +116,9 @@ Widget build(context) {
             home: MyStatefulWidget(),
           );
         } else {
-          return const CircularProgressIndicator();
+          return const CircularProgressIndicator(
+            semanticsLabel: &#39;Linear progress indicator&#39;,
+          );
         }
       });
 }</code></pre>

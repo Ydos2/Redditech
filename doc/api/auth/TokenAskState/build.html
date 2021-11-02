@@ -164,12 +164,11 @@ Widget build(BuildContext context) {
       body: WebView(
           initialUrl: askAccess(),
           javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (controller) {
-            control.complete(controller);
+          onWebViewCreated: (WebViewController controller) {
+            control = controller;
           },
           onPageStarted: (url) async {
             if (url.contains(&quot;code=&quot;)) {
-              print(url);
               Uri link = Uri.dataFromString(url.substring(0, url.length - 2));
               var code;
               setState(() {
@@ -179,6 +178,11 @@ Widget build(BuildContext context) {
               var prof = getMyProfile();
               USERPROFILE = await getMyProfile();
               return runApp(MyApp());
+            } else if (url.contains(&quot;error&quot;)) {
+                print (&quot;ight im outta here&quot;);
+                setState(() {
+                  control.loadUrl(askAccess());
+                });
             }
           }));
 }</code></pre>
