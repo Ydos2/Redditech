@@ -95,6 +95,7 @@ class subReddit {
   }
 
   void _extractPosts(Map<String, dynamic> jsonrsp) {
+    this.posts.clear();
     for (int i = 0; i != jsonrsp["data"]["children"].length; i++) {
       var title = jsonrsp["data"]["children"][i]["data"]["title"];
       var text = jsonrsp["data"]["children"][i]["data"]["selftext"];
@@ -126,7 +127,8 @@ class subReddit {
     if (rsp.statusCode == 200) {
       final jsonrsp = jsonDecode(rsp.body);
       this.imageUrl = jsonrsp["data"]["community_icon"];
-      this.imageUrl = imageUrl.substring(0, imageUrl.indexOf("?"));
+      if (!imageUrl.isEmpty)
+        this.imageUrl = imageUrl.substring(0, imageUrl.indexOf("?"));
       this.description = jsonrsp["data"]["public_description"];
       this.bannerUrl = jsonrsp["data"]["banner_background_image"];
       this.bannerUrl = bannerUrl.substring(0, bannerUrl.indexOf("?"));
@@ -141,8 +143,8 @@ class subReddit {
   }
 
   /** \[Brief\] > Make the user unsubcribe to this subReddit
-   *
-   * this function shall be awaited.
+
+   this function shall be awaited.
    */
   Future unsubscribe() async {
     await http.post(
@@ -157,8 +159,8 @@ class subReddit {
   }
 
   /** \[Brief\] > Make the user subcribe to this subReddit
-   *
-   * this function shall be awaited.
+
+   this function shall be awaited.
    */
   Future subscribe() async {
     await http.post(
@@ -173,10 +175,10 @@ class subReddit {
   }
 
   /** \[Brief\] > get the top post from this subReddit
-   *
-   * automatically fills the "posts" List in the current object
-   * this function shall be awaited.
-   *
+
+   automatically fills the "posts" List in the current object
+   this function shall be awaited.
+
    * \[Return\] > true if it succeed, false it failed
    */
   Future<bool> getTop() async {
@@ -199,10 +201,10 @@ class subReddit {
   }
 
   /** \[Brief\] > get the new post from this subReddit
-   *
-   * automatically fills the "posts" List in the current object
-   * this function shall be awaited.
-   *
+
+   automatically fills the "posts" List in the current object
+   this function shall be awaited.
+
    * \[Return\] > true if it succeed, false it failed
    */
   Future<bool> getNew() async {
@@ -225,10 +227,10 @@ class subReddit {
   }
 
   /** \[Brief\] > get the hot post from this subReddit
-   *
-   * automatically fills the "posts" List in the current object
-   * this function shall be awaited.
-   *
+
+   automatically fills the "posts" List in the current object
+   this function shall be awaited.
+
    * \[Return\] > true if it succeed, false it failed
    */
   Future<bool> getHot() async {
@@ -252,11 +254,11 @@ class subReddit {
 }
 
 /** \[Brief\] > get random posts from the list of the subreddits provided
- *
+
  * \[Param\] > (subs) | A list of subReddits that the posts should be fetched from
- * this function is usually called with getMySubscription() as parameter
- * this function shall be awaited.
- *
+ this function is usually called with getMySubscription() as parameter
+ this function shall be awaited.
+
  * \[Return\] > a list of new posts randomly picked in the list of subReddit
  */
 Future<List<Post>> getRandomPosts(List<subReddit> subs) async {
@@ -279,9 +281,9 @@ Future<List<Post>> getRandomPosts(List<subReddit> subs) async {
 }
 
 /** \[Brief\] > get the subreddit that the logged-in user is subscribed to
- *
- * this function shall be awaited.
- *
+
+ this function shall be awaited.
+
  * \[Return\] > a list of new posts randomly picked in the list of subReddit
  */
 Future<List<subReddit>> getMySubscriptions() async {

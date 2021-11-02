@@ -16,6 +16,11 @@ import 'package:redditech/home_page.dart';
 enum LoginState { LOG_OUT, LOG_IN }
 var authToken = "";
 
+/** \[Brief\] > This widget is used for the connection
+
+    You may use it to gather the token, the authtoken will be collected by
+    this widget
+ */
 class TokenAsk extends StatefulWidget {
   const TokenAsk({Key? key}) : super(key: key);
 
@@ -27,11 +32,17 @@ String getAuthToken() {
   return (authToken);
 }
 
+/** \[Brief\] > Function to use to set the token to a value
+
+    Can be sent a null so its null-sound-safe
+
+ */
 void setAuthToken(String? token) {
   authToken = token == null ? "null" : token;
   print("Token has been set to: " + authToken);
 }
 
+/** \[Brief\] > It is used to retrieve the token from the code send by reddit */
 Future<void> retrieveToken(String code) async {
   String username = 'BFZHFNgg7jaA56q4idvvyg';
   String password = 'GIGTERPAvmnhm6znH1zo8cWYsx6Rxg';
@@ -63,6 +74,7 @@ Future<void> retrieveToken(String code) async {
   }
 }
 
+
 String askAccess() {
   String url = "https://www.reddit.com/api/v1/authorize";
 
@@ -73,14 +85,15 @@ String askAccess() {
     'redirect_uri': 'http://localhost:8080',
     'duration': 'permanent',
     'scope':
-        'identity,edit,flair,history,modconfig,modflair,modlog,modposts,modwiki,mysubreddits,privatemessages,read,report,save,submit,subscribe,vote,wikiedit,wikiread,account'
+        'identity,edit,history,mysubreddits,read,subscribe,vote,account'
   };
   print(addArgsToUrl(url, data));
   return addArgsToUrl(url, data);
 }
 
+/** \[Brief\] > this class is a webview to get the code */
 class TokenAskState extends State<TokenAsk> {
-  final Completer<WebViewController> control = Completer<WebViewController>();
+  late WebViewController control;
   LoginState _state = LoginState.LOG_OUT;
 
   @override
@@ -95,12 +108,11 @@ class TokenAskState extends State<TokenAsk> {
         body: WebView(
             initialUrl: askAccess(),
             javascriptMode: JavascriptMode.unrestricted,
-            onWebViewCreated: (controller) {
-              control.complete(controller);
+            onWebViewCreated: (WebViewController controller) {
+              control = controller;
             },
             onPageStarted: (url) async {
               if (url.contains("code=")) {
-                print(url);
                 Uri link = Uri.dataFromString(url.substring(0, url.length - 2));
                 var code;
                 setState(() {
@@ -110,6 +122,11 @@ class TokenAskState extends State<TokenAsk> {
                 var prof = getMyProfile();
                 USERPROFILE = await getMyProfile();
                 return runApp(MyApp());
+              } else if (url.contains("error")) {
+                  print ("ight im outta here");
+                  setState(() {
+                    control.loadUrl(askAccess());
+                  });
               }
             }));
   }

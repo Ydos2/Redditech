@@ -12,13 +12,15 @@ class Settings {
   bool show_nsfw = true;
   bool dark_mode = true;
 
-  /** @biref setting constructor
-   * you should call the recover function rigth after
+  /** \[Brief] > setting constructor
+
+   you should call the recover function rigth after
    */
   Settings() {}
 
-  /** @brief copy the current item
-   * @return a copy of the current item
+  /** \[Brief] > copy the current item
+
+   * \[Return] > a copy of the current item
    */
   Settings copy() {
     Settings s = new Settings();
@@ -32,7 +34,8 @@ class Settings {
     return s;
   }
 
-  /** @brief recover the setting of the current logged-in user
+  /** \[Brief] > recover the setting of the current logged-in user
+
    * this function shall be awaited
    */
   Future recover() async {
@@ -59,7 +62,8 @@ class Settings {
     }
   }
 
-  /** @brief apply the setting directly to the user's reddit account
+  /** \[Brief] > apply the setting directly to the user's reddit account
+
    * this function shall be awaited
    */
   Future apply() async {
@@ -81,7 +85,5 @@ class Settings {
       },
       body: data,
     );
-    print(rsp.body);
-    print(rsp.statusCode);
   }
 }
